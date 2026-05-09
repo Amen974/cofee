@@ -25,7 +25,7 @@ const Navbar = () => {
             <span className="absolute top-3 right-35 md:right-19 text-xs bg-red-700 text-white rounded-full px-1 cursor-pointer">0</span>
           </Link>
 
-          <Link href=''><User className="w-6 h-6" /></Link>
+          <Link href='/login'><User className="w-6 h-6" /></Link>
 
           <button onClick={() => setIsOpen(!isOpen)} className="cursor-pointer md:hidden">
             {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
