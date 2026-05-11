@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Nunito, Dancing_Script } from 'next/font/google'
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import IsOpen from "./components/IsOpen";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -31,6 +32,7 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <Navbar/>
+        <IsOpen/>
         {children}
       </body>
     </html>

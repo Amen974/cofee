@@ -1,8 +1,13 @@
-import React from 'react'
+'use client'
+
+import { useIsOpen } from "@/lib/store/useIsOpen"
 
 const Page = () => {
+  const { setIsOpen } = useIsOpen()
   return (
-    <div>nice</div>
+    <>
+    <button onClick={setIsOpen}>Change is Open</button>
+    </>
   )
 }
 
