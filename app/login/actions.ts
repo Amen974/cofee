@@ -14,5 +14,5 @@ export async function login (fromData: FormData) {
   })
 
   if (error) redirect("/login?error=Invalid%20credentials")
-  else redirect("/dashboard")
+  else redirect("/dashboard/live-orders")
 }
