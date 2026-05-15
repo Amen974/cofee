@@ -7,13 +7,14 @@ export type Orders = {
   lng: number;
   status: string;
   notes: string;
-  items: string[];
+  items: Menu[];
   total_price: number;
 }
 
 export type Menu = {
   id: string;
   name: string;
+  quantity: number
   description: string;
   price: number;
   image_url: string;
