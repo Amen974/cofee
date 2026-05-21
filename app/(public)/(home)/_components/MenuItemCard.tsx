@@ -2,7 +2,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Menu } from "@/types"
-import { usecart } from "@/lib/cart/useCart"
+import { usecart } from "@/lib/store/useCart"
 
 export default function MenuItemCard({ item }: { item: Menu }) {
   const [quantity, setQuantity] = useState(1)
@@ -30,12 +30,13 @@ export default function MenuItemCard({ item }: { item: Menu }) {
         <p className="text-lg font-semibold mb-2">${item.price}</p>
         <div className="flex items-center border-2 border-red-700 rounded-xl overflow-hidden w-fit">
           <button
-            onClick={() => setQuantity(q => Math.min(10, q + 1))}
+            onClick={() => setQuantity(q => Math.max(1, q - 1))}
             disabled={!item.is_available}
             className="px-3 py-1 text-red-700 font-bold hover:bg-red-700 hover:text-white transition-colors disabled:cursor-not-allowed"
           >
-            +
+            -
           </button>
+
           <input
             type="number"
             value={quantity}
@@ -45,12 +46,13 @@ export default function MenuItemCard({ item }: { item: Menu }) {
             disabled={!item.is_available}
             className="w-10 text-center bg-transparent text-white outline-none disabled:cursor-not-allowed"
           />
+
           <button
-            onClick={() => setQuantity(q => Math.max(1, q - 1))}
+            onClick={() => setQuantity(q => Math.min(10, q + 1))}
             disabled={!item.is_available}
             className="px-3 py-1 text-red-700 font-bold hover:bg-red-700 hover:text-white transition-colors disabled:cursor-not-allowed"
           >
-            -
+            +
           </button>
         </div>
       </div>

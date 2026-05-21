@@ -15,7 +15,7 @@ const Navbar = () => {
         <div className="md:flex justify-between flex-1 hidden mr-35">
           <Link href="/" className="px-2 py-1.5 hover:text-white hover:bg-red-700 duration-200 rounded-[10px]" >Home</Link>
           <Link href="/menu" className="px-2 py-1.5 hover:text-white hover:bg-red-700 duration-200 rounded-[10px]" >Menu</Link>
-          <Link href="" className="px-2 py-1.5 hover:text-white hover:bg-red-700 duration-200 rounded-[10px]" >Reservation</Link>
+          <Link href="/reservation" className="px-2 py-1.5 hover:text-white hover:bg-red-700 duration-200 rounded-[10px]" >Reservation</Link>
           <Link href="" className="px-2 py-1.5 hover:text-white hover:bg-red-700 duration-200 rounded-[10px]" >Contact</Link>
         </div>
 
@@ -32,7 +32,7 @@ const Navbar = () => {
         <div className="flex flex-col text-center">
           <Link href="/" className="py-4 hover:text-white hover:bg-red-700 duration-200" onClick={() => setIsOpen(false)}>Home</Link>
           <Link href="/menu" className="py-4 hover:text-white hover:bg-red-700 duration-200" onClick={() => setIsOpen(false)}>Menu</Link>
-          <Link href="" className="py-4 hover:text-white hover:bg-red-700 duration-200" onClick={() => setIsOpen(false)}>Reservation</Link>
+          <Link href="/reservation" className="py-4 hover:text-white hover:bg-red-700 duration-200" onClick={() => setIsOpen(false)}>Reservation</Link>
           <Link href="" className="py-4 hover:text-white hover:bg-red-700 duration-200" onClick={() => setIsOpen(false)}>Contact</Link>
         </div>
       )}

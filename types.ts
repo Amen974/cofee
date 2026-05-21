@@ -9,6 +9,7 @@ export type Orders = {
   notes: string;
   items: Menu[];
   total_price: number;
+  address: string
 }
 
 export type Menu = {
