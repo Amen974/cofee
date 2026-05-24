@@ -3,21 +3,15 @@ import { generateSlots, getSeatsInUse } from '@/lib/availability'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 
+export async function POST(req: NextRequest) {
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
 
-export async function GET(req: NextRequest) {
-    const cookieStore = await cookies()
-    const supabase = createClient(cookieStore)
+  const body = await req.json()
+  const { date, start_time, party_size, guest_name, guest_phone } = body
 
-  const { searchParams } = new URL(req.url)
-  const date = searchParams.get('date')         // YYYY-MM-DD
-  const partySizeRaw = searchParams.get('party_size')
-
-  if (!date || !partySizeRaw)
-    return NextResponse.json({ error: 'date and party_size are required' }, { status: 400 })
-
-  const partySize = parseInt(partySizeRaw)
-  if (isNaN(partySize) || partySize < 1)
-    return NextResponse.json({ error: 'Invalid party_size' }, { status: 400 })
+  if (!date || !start_time || !party_size || !guest_name || !guest_phone)
+    return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
 
   // 1. Load settings
   const { data: settings, error: sErr } = await supabase
@@ -31,12 +25,17 @@ export async function GET(req: NextRequest) {
   const { open_time, close_time, slot_interval, total_capacity,
           session_duration, cleaning_buffer, max_party_size } = settings
 
-  if (partySize > max_party_size)
+  if (party_size > max_party_size)
     return NextResponse.json({ error: `Max party size is ${max_party_size}` }, { status: 400 })
 
-  const blockDuration = session_duration + cleaning_buffer
+  const blockDuration = session_duration + parseInt(cleaning_buffer)
 
-  // 2. Load confirmed reservations for that date
+  // 2. Validate the requested slot exists in the valid grid
+  const validSlots = generateSlots(open_time, close_time, slot_interval, blockDuration)
+  if (!validSlots.includes(start_time))
+    return NextResponse.json({ error: 'Invalid time slot' }, { status: 400 })
+
+  // 3. Re-check availability (race condition guard)
   const { data: reservations, error: rErr } = await supabase
     .from('reservations')
     .select('start_time, end_time, party_size')
@@ -44,15 +43,26 @@ export async function GET(req: NextRequest) {
     .eq('status', 'confirmed')
 
   if (rErr)
-    return NextResponse.json({ error: 'Could not load reservations' }, { status: 500 })
+    return NextResponse.json({ error: 'Could not validate availability' }, { status: 500 })
 
-  // 3. Generate slots and filter available ones
-  const slots = generateSlots(open_time, close_time, slot_interval, blockDuration)
+  const seatsUsed = getSeatsInUse(start_time, blockDuration, reservations ?? [])
+  if ((total_capacity - seatsUsed) < party_size)
+    return NextResponse.json({ error: 'Slot no longer available' }, { status: 409 })
 
-  const available = slots.filter(slot => {
-    const seatsUsed = getSeatsInUse(slot, blockDuration, reservations ?? [])
-    return (total_capacity - seatsUsed) >= partySize
-  })
+  // 4. Compute end_time
+  const [h, m] = start_time.split(':').map(Number)
+  const endMin = h * 60 + m + blockDuration
+  const end_time = `${Math.floor(endMin / 60).toString().padStart(2, '0')}:${(endMin % 60).toString().padStart(2, '0')}`
 
-  return NextResponse.json({ date, party_size: partySize, available_slots: available })
+  // 5. Insert
+  const { data, error: iErr } = await supabase
+    .from('reservations')
+    .insert({ reservation_date: date, start_time, end_time, party_size, guest_name, guest_phone })
+    .select()
+    .single()
+
+  if (iErr)
+    return NextResponse.json({ error: 'Failed to create reservation' }, { status: 500 })
+
+  return NextResponse.json({ reservation: data }, { status: 201 })
 }
