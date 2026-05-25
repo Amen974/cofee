@@ -20,11 +20,20 @@ const statusDot: Record<string, string> = {
 
 type Filter = 'pending' | 'confirmed' | 'cancelled'
 
-function timeAgo(iso: string) {
+function timeAgo(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
   if (diff < 1) return 'just now'
   if (diff === 1) return '1 min ago'
-  return `${diff} min ago`
+  if (diff < 60) return `${diff} mins ago`
+
+  const hours = Math.floor(diff / 60)
+  const minutes = diff % 60
+
+  if (hours === 1 && minutes === 0) return '1h ago'
+  if (hours === 1) return `1h ${minutes}m ago`
+  if (minutes === 0) return `${hours}h ago`
+
+  return `${hours}h ${minutes}m ago`
 }
 
 export default function LiveOrdersPage() {

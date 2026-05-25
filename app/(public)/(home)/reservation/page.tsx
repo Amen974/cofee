@@ -1,11 +1,23 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-
+import { Clock } from 'lucide-react'
 type Slot = string
 
+const MAX_BOOKING_DAYS = 30
+
+const getDateString = (date: Date): string => {
+  return date.toISOString().split('T')[0]
+}
+
+const getMaxBookingDate = (): string => {
+  const maxDate = new Date()
+  maxDate.setDate(maxDate.getDate() + MAX_BOOKING_DAYS)
+  return getDateString(maxDate)
+}
+
 export default function BookingPage() {
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0])
+  const [date, setDate] = useState(getDateString(new Date()))
   const [partySize, setPartySize] = useState(2)
   const [slots, setSlots] = useState<Slot[]>([])
   const [selected, setSelected] = useState<string | null>(null)
@@ -57,12 +69,12 @@ export default function BookingPage() {
     <main className="bg-black min-h-screen flex flex-col items-center py-12 px-4 text-white font-serif">
       <div className="w-full max-w-2xl flex flex-col gap-8">
 
-        {/* top label */}
+        
         <p className="text-[11px] tracking-[0.18em] uppercase text-neutral-600">
           Reserve a table
         </p>
 
-        {/* date + guests row */}
+        
         <div className="flex flex-wrap gap-4">
           <div className="flex-1 min-w-50 border border-neutral-800 rounded-2xl p-5 bg-neutral-950">
             <p className="text-[11px] tracking-[0.15em] uppercase text-neutral-600 mb-4">When</p>
@@ -70,6 +82,8 @@ export default function BookingPage() {
               type="date"
               value={date}
               onChange={e => setDate(e.target.value)}
+              min={getDateString(new Date())}
+              max={getMaxBookingDate()}
               className="w-full bg-transparent border border-neutral-800 rounded-xl px-3 py-2.5 text-sm text-white outline-none focus:border-neutral-500 hover:border-neutral-600 transition-colors scheme-dark"
             />
           </div>
@@ -94,7 +108,7 @@ export default function BookingPage() {
           </div>
         </div>
 
-        {/* available times */}
+        
         <div>
           <p className="text-[11px] tracking-[0.18em] uppercase text-neutral-600 mb-4">
             Available times
@@ -120,11 +134,11 @@ export default function BookingPage() {
           </div>
         </div>
 
-        {/* guest details — only shown after selecting a slot */}
+        
         {selected && (
           <div className="border border-neutral-800 rounded-2xl p-6 bg-neutral-950 flex flex-col gap-5">
             <div className="inline-flex items-center gap-2 bg-red-900/15 border border-red-800 rounded-lg px-3 py-1.5 text-red-400 text-sm w-fit">
-              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              <Clock size={16} />
               {selected}
             </div>
 
@@ -152,7 +166,7 @@ export default function BookingPage() {
 
             <button
               onClick={book}
-              className="bg-red-700 hover:bg-red-800 transition-colors rounded-xl py-3 text-sm tracking-widest uppercase mt-1"
+              className="bg-red-700 hover:bg-red-800 transition-colors rounded-xl py-3 text-sm tracking-widest uppercase mt-1 active:scale-95"
             >
               Confirm reservation
             </button>

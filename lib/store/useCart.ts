@@ -1,10 +1,10 @@
-import { Menu } from "@/types";
+import { Item } from "@/types";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 type CartItems = {
-  items: Menu[];
-  addItem: (item: Menu) => void;
+  items: Item[];
+  addItem: (item: Item) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
