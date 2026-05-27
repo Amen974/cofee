@@ -8,17 +8,16 @@ export async function GET(req: NextRequest) {
   const supabase = createClient(cookieStore)
 
   const { searchParams } = new URL(req.url)
-  const date = searchParams.get('date')         // YYYY-MM-DD
+  const date = searchParams.get('date')
   const partySizeRaw = searchParams.get('party_size')
 
   if (!date || !partySizeRaw)
     return NextResponse.json({ error: 'date and party_size are required' }, { status: 400 })
 
   const partySize = parseInt(partySizeRaw)
-  if (isNaN(partySize) || partySize < 1)
+  if (isNaN(partySize) || partySize < 2)
     return NextResponse.json({ error: 'Invalid party_size' }, { status: 400 })
 
-  // 1. Load settings
   const { data: settings, error: sErr } = await supabase
     .from('restaurant_settings')
     .select('*')
@@ -35,7 +34,6 @@ export async function GET(req: NextRequest) {
 
   const blockDuration = session_duration + cleaning_buffer
 
-  // 2. Load confirmed reservations for that date
   const { data: reservations, error: rErr } = await supabase
     .from('reservations')
     .select('start_time, end_time, party_size')
@@ -45,7 +43,6 @@ export async function GET(req: NextRequest) {
   if (rErr)
     return NextResponse.json({ error: 'Could not load reservations' }, { status: 500 })
 
-  // 3. Generate slots and filter available ones
   const slots = generateSlots(open_time, close_time, slot_interval, blockDuration)
 
   const available = slots.filter(slot => {

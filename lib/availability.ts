@@ -36,7 +36,6 @@ export function getSeatsInUse(
   return reservations.reduce((sum, r) => {
     const rStart = toMin(r.start_time)
     const rEnd = toMin(r.end_time)
-    // overlaps if rStart < slotEnd AND rEnd > slotStart
     if (rStart < slotEnd && rEnd > slotStart) {
       return sum + r.party_size
     }

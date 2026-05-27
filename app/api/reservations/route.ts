@@ -13,7 +13,6 @@ export async function POST(req: NextRequest) {
   if (!date || !start_time || !party_size || !guest_name || !guest_phone)
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
 
-  // 1. Load settings
   const { data: settings, error: sErr } = await supabase
     .from('restaurant_settings')
     .select('*')
@@ -30,12 +29,10 @@ export async function POST(req: NextRequest) {
 
   const blockDuration = session_duration + parseInt(cleaning_buffer)
 
-  // 2. Validate the requested slot exists in the valid grid
   const validSlots = generateSlots(open_time, close_time, slot_interval, blockDuration)
   if (!validSlots.includes(start_time))
     return NextResponse.json({ error: 'Invalid time slot' }, { status: 400 })
 
-  // 3. Re-check availability (race condition guard)
   const { data: reservations, error: rErr } = await supabase
     .from('reservations')
     .select('start_time, end_time, party_size')
@@ -49,12 +46,10 @@ export async function POST(req: NextRequest) {
   if ((total_capacity - seatsUsed) < party_size)
     return NextResponse.json({ error: 'Slot no longer available' }, { status: 409 })
 
-  // 4. Compute end_time
   const [h, m] = start_time.split(':').map(Number)
   const endMin = h * 60 + m + blockDuration
   const end_time = `${Math.floor(endMin / 60).toString().padStart(2, '0')}:${(endMin % 60).toString().padStart(2, '0')}`
 
-  // 5. Insert
   const { data, error: iErr } = await supabase
     .from('reservations')
     .insert({ reservation_date: date, start_time, end_time, party_size, guest_name, guest_phone })
