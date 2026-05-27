@@ -49,7 +49,7 @@ const BookingClient = ({ settings }: { settings: ReservationSettings }) => {
                   className={`border rounded-xl py-2 text-sm transition-all ${state.partySize === partySize
                     ? 'border-red-700 bg-red-900/20 text-red-400'
                     : 'border-neutral-800 text-neutral-500 hover:border-neutral-600 hover:text-neutral-300'
-                  }`}
+                    }`}
                 >
                   {partySize}
                 </button>
@@ -62,7 +62,7 @@ const BookingClient = ({ settings }: { settings: ReservationSettings }) => {
           <p className="text-[11px] tracking-[0.18em] uppercase text-neutral-600 mb-4">
             Available times
           </p>
-          
+
           <div className="flex flex-wrap gap-2">
             {status.loading ? (
               <p className="text-neutral-400 text-sm italic">Loading availability...</p>
@@ -77,7 +77,7 @@ const BookingClient = ({ settings }: { settings: ReservationSettings }) => {
                   className={`border rounded-xl px-5 py-2.5 text-sm tracking-wide transition-all ${state.selected === slot
                     ? 'border-red-700 bg-red-900/15 text-red-400'
                     : 'border-neutral-800 text-neutral-400 hover:border-red-800 hover:text-red-400'
-                  }`}
+                    }`}
                 >
                   {slot}
                 </button>
@@ -125,18 +125,13 @@ const BookingClient = ({ settings }: { settings: ReservationSettings }) => {
             </button>
           </div>
         )}
-        
+
       </div>
       {status.error && (
-            <p className="text-red-400 text-sm border border-red-900 bg-red-900/10 rounded-lg px-3 py-2 mb-4">
-              {status.error}
-            </p>
-          )}
-          {status.success && (
-            <p className="text-green-400 text-sm border border-green-900 bg-green-900/10 rounded-lg px-3 py-2 mb-4">
-              {status.success}
-            </p>
-          )}
+        <p className="text-red-400 text-sm border border-red-900 bg-red-900/10 rounded-lg px-3 py-2 mb-4">
+          {status.error}
+        </p>
+      )}
     </main>
   )
 }

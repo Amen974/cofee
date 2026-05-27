@@ -87,3 +87,5 @@ export type UseBookingResult = {
   readonly setGuestPhone: (phone: string) => void
   readonly book: () => Promise<void>
 }
+
+export type Status = 'idle' | 'loading' | 'error' | 'success' | 'itemAdded'

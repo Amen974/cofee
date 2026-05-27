@@ -1,5 +1,6 @@
 import { useEffect, useReducer, useState } from 'react'
 import { ReservationSettings, BookingState , BookingAction, BookingStatus, UseBookingResult, } from '@/types'
+import { useCartIndicator } from '@/lib/store/useCartIndicator'
 
 const getDateString = (date: Date): string => date.toISOString().split('T')[0]
 
@@ -64,6 +65,7 @@ const createStatus = (overrides: Partial<BookingStatus>): BookingStatus => ({
 export const useBooking = (settings: ReservationSettings): UseBookingResult => {
   const [status, setStatus] = useState<BookingStatus>(initialStatus)
   const [state, dispatch] = useReducer(bookingReducer, settings.min_party_size, initialState)
+  const { setCartStatus, resetCartStatus } = useCartIndicator()
   const minPartySize = settings.min_party_size
   const maxPartySize = settings.max_party_size
   const maxBookingDays = settings.max_booking_days
@@ -146,6 +148,7 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
     }
 
     setStatus(createStatus({ loading: true }))
+    setCartStatus('loading', 'Placing reservation...')
 
     try {
       const response = await fetch('/api/reservations', {
@@ -168,6 +171,8 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
       }
 
       setStatus(createStatus({ success: `Reservation confirmed for ${state.selected}` }))
+      setCartStatus('success', `Reservation confirmed for ${state.selected}`)
+      setTimeout(() => resetCartStatus(), 3000)
       dispatch({ type: 'resetForm' })
       dispatch({ type: 'setSlots', payload: [] })
     } catch {

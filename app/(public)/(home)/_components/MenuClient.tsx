@@ -2,9 +2,9 @@
 
 import { useState } from "react"
 import MenuItemCard from "./MenuItemCard"
-import { Menu } from "@/types"
+import { Item } from "@/types"
 
-export default function MenuClient({ items }: { items: Menu[] }) {
+export default function MenuClient({ items }: { items: Item[] }) {
   const [search, setSearch] = useState("")
 
   const filtered = items.filter((item) =>

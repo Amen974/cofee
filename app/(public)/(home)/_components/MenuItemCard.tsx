@@ -1,12 +1,14 @@
 "use client"
 import { useState } from "react"
 import Image from "next/image"
-import { Menu } from "@/types"
+import { Item } from "@/types"
 import { usecart } from "@/lib/store/useCart"
+import { useCartIndicator } from "@/lib/store/useCartIndicator"
 
-export default function MenuItemCard({ item }: { item: Menu }) {
+export default function MenuItemCard({ item }: { item: Item }) {
   const [quantity, setQuantity] = useState(1)
   const { addItem } = usecart()
+  const { setCartStatus, resetCartStatus } = useCartIndicator()
 
   return (
     <div className={`border-2 border-red-700 rounded-2xl p-4 flex flex-col h-110 relative ${!item.is_available ? 'opacity-60' : 'hover:shadow-lg hover:shadow-red-700/20'}`}>
@@ -16,14 +18,14 @@ export default function MenuItemCard({ item }: { item: Menu }) {
         </span>
       )}
 
-        <Image
-          src={item.image_url}
-          alt={item.name}
-          width={200}
-          height={200}
-          loading="eager"
-          className="rounded-2xl object-cover h-50"
-        />
+      <Image
+        src={item.image_url}
+        alt={item.name}
+        width={200}
+        height={200}
+        loading="eager"
+        className="rounded-2xl object-cover h-50"
+      />
 
       <div>
         <h1 className="text-red-700 text-4xl font-bold my-2">{item.name}</h1>
@@ -56,10 +58,19 @@ export default function MenuItemCard({ item }: { item: Menu }) {
           </button>
         </div>
       </div>
-      
+
       <button
         disabled={!item.is_available}
-        onClick={() => addItem({ ...item, quantity })}
+        onClick={() => {
+          try {
+            addItem({ ...item, quantity })
+            setCartStatus("itemAdded", "Item added")
+            setTimeout(() => resetCartStatus(), 2000)
+          } catch (err) {
+            setCartStatus("error", "Failed to add item")
+            setTimeout(() => resetCartStatus(), 3000)
+          }
+        }}
         className="bg-red-700 text-white py-2 rounded-xl font-semibold
             hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6 cursor-pointer active:scale-95"
       >
