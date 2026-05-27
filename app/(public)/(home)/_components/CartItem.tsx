@@ -1,11 +1,11 @@
 'use client'
 
 import { usecart } from "@/lib/store/useCart"
-import { Menu } from "@/types"
+import { Item } from "@/types"
 
 import Image from "next/image"
 
-export default function CartItem({ items }: { items: Menu[] }) {
+export default function CartItem({ items }: { items: Item[] }) {
   const { updateQuantity, removeItem } = usecart()
 
   return (

@@ -66,7 +66,7 @@ const BookingClient = ({ settings }: { settings: ReservationSettings }) => {
           <div className="flex flex-wrap gap-2">
             {status.loading ? (
               <p className="text-neutral-400 text-sm italic">Loading availability...</p>
-            ) : state.slots.length === 0 ? (
+            ) : state.slots.length === 0 && !status.success ? (
               <p className="text-neutral-600 text-sm italic">No available times for this selection</p>
             ) : (
               state.slots.map(slot => (
