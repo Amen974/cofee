@@ -1,10 +1,6 @@
 'use client'
-import { createClient } from "@/lib/supabase/client"
-import { Orders } from "@/types"
-import { useEffect, useState } from "react"
+import { Filter, useOrders } from "./useOrders"
 import { Phone, Clock, ShoppingBag } from 'lucide-react'
-
-const STATUSES = ['pending', 'confirmed', 'cancelled']
 
 const statusStyles: Record<string, string> = {
   pending: 'bg-yellow-500/10 text-yellow-600 border border-yellow-500/20',
@@ -18,69 +14,21 @@ const statusDot: Record<string, string> = {
   cancelled: 'bg-red-400',
 }
 
-type Filter = 'pending' | 'confirmed' | 'cancelled'
-
 function timeAgo(iso: string): string {
   const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
   if (diff < 1) return 'just now'
   if (diff === 1) return '1 min ago'
   if (diff < 60) return `${diff} mins ago`
-
   const hours = Math.floor(diff / 60)
   const minutes = diff % 60
-
   if (hours === 1 && minutes === 0) return '1h ago'
   if (hours === 1) return `1h ${minutes}m ago`
   if (minutes === 0) return `${hours}h ago`
-
   return `${hours}h ${minutes}m ago`
 }
 
 export default function LiveOrdersPage() {
-  const supabase = createClient()
-  const [orders, setOrders] = useState<Orders[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [filter, setFilter] = useState<Filter>('pending')
-
-  const updateStatus = async (id: string, status: string) => {
-    const previous = orders.find(o => o.id === id)?.status
-    setOrders(prev => prev.map(o => o.id === id ? { ...o, status } : o))
-
-    try {
-      const { error } = await supabase.from('orders').update({ status }).eq('id', id)
-      if (error) throw error
-    } catch (err) {
-      console.error(err)
-      setOrders(prev => prev.map(o => o.id === id ? { ...o, status: previous! } : o))
-    }
-  }
-
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const { data, error } = await supabase
-        .from('orders')
-        .select('*')
-        .order('created_at', { ascending: false })
-      if (error) console.error(error)
-      else setOrders(data)
-      setLoading(false)
-    }
-    fetchOrders()
-
-    const channel = supabase
-      .channel('orders-changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, (payload) => {
-        if (payload.eventType === 'INSERT')
-          setOrders(prev => [payload.new as Orders, ...prev])
-        else if (payload.eventType === 'UPDATE')
-          setOrders(prev => prev.map(o => o.id === payload.new.id ? payload.new as Orders : o))
-        else if (payload.eventType === 'DELETE')
-          setOrders(prev => prev.filter(o => o.id !== payload.old.id))
-      })
-      .subscribe()
-
-    return () => { supabase.removeChannel(channel) }
-  }, [])
+  const { STATUSES, orders, loading, filter, setFilter, filteredOrders, updateStatus } = useOrders()
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 text-neutral-500">
@@ -96,18 +44,15 @@ export default function LiveOrdersPage() {
     </div>
   )
 
-  const filtered = orders.filter(o => o.status === filter)
-
   return (
     <div className="p-4">
-
       <div className="flex gap-2 mb-4">
-        {(['pending', 'confirmed', 'cancelled'] as const).map(f => (
+        {STATUSES.map(f => (
           <button
             key={f}
             onClick={() => setFilter(f)}
             className={`text-xs px-3.5 py-1.5 rounded-full border transition-all
-          ${filter === f
+              ${filter === f
                 ? 'bg-red-700 text-white border-transparent'
                 : 'border-neutral-700 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200'
               }`}
@@ -118,12 +63,11 @@ export default function LiveOrdersPage() {
       </div>
 
       <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-        {filtered.map(o => (
+        {filteredOrders.map(o => (
           <div
             key={o.id}
             className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 w-72 flex flex-col gap-3 hover:border-neutral-700 transition-colors"
           >
-
             <div className="flex items-start justify-between gap-2">
               <h2 className="text-white font-semibold text-xl leading-tight">{o.customer_name}</h2>
               <span className={`text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5 shrink-0 ${statusStyles[o.status]}`}>
@@ -132,28 +76,27 @@ export default function LiveOrdersPage() {
               </span>
             </div>
 
-
             <div className="flex items-center gap-1.5 text-neutral-400 text-sm">
               <Phone className="w-3.5 h-3.5" />
               {o.phone}
             </div>
 
-            {o.lat && o.lng && (<button
-              onClick={() => {
-                const coords = `${o.lat},${o.lng}`
-                navigator.clipboard.writeText(coords)
-              }}
-              className="px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 hover:bg-neutral-700 hover:border-neutral-600 transition-colors cursor-pointer"
-            >
-              copy Location
-            </button>)}
+            {o.lat && o.lng && (
+              <button
+                onClick={() => navigator.clipboard.writeText(`${o.lat},${o.lng}`)}
+                className="px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 hover:bg-neutral-700 hover:border-neutral-600 transition-colors cursor-pointer"
+              >
+                Copy Location
+              </button>
+            )}
 
-            {o.address && (<div className="px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 hover:bg-neutral-700 hover:border-neutral-600 transition-colors">
-              {o.address}
-            </div>)}
+            {o.address && (
+              <div className="px-3 py-2 bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300">
+                {o.address}
+              </div>
+            )}
 
             <div className="border-t border-neutral-800" />
-
 
             <div className="flex flex-col gap-1">
               {o.items.map(i => (
@@ -164,8 +107,14 @@ export default function LiveOrdersPage() {
               ))}
             </div>
 
-            <div className="border-t border-neutral-800" />
+            <textarea
+              className="w-full h-20 p-2 bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 resize-none focus:ring-1 focus:ring-neutral-600 outline-none"
+              value={o.notes || ''}
+              maxLength={400}
+              disabled
+            />
 
+            <div className="border-t border-neutral-800" />
 
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1 text-xs text-neutral-500">
@@ -177,13 +126,14 @@ export default function LiveOrdersPage() {
               </span>
             </div>
 
-
             <select
               value={o.status}
-              onChange={e => updateStatus(o.id, e.target.value)}
+              onChange={e => updateStatus(o.id, e.target.value as Filter)}
               className="bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 px-3 py-2 outline-none cursor-pointer hover:border-neutral-600 transition-colors"
             >
-              {STATUSES.map(s => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+              {STATUSES.map(s => (
+                <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+              ))}
             </select>
           </div>
         ))}

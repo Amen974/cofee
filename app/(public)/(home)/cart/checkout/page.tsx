@@ -1,6 +1,6 @@
 'use client'
 
-import { useCheckout } from '../useCheckout'
+import { useCheckout } from './useCheckout'
 import { useRouter } from 'next/navigation'
 import { JSX, useEffect } from 'react'
 import { ArrowRight, MapPin } from 'lucide-react'

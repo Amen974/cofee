@@ -65,6 +65,21 @@ const submitReducer = (state: SubmitState, action: SubmitAction): SubmitState =>
   }
 }
 
+const validatePhone = (phone: string): boolean => {
+  const numericPhone = phone.replace(/\D/g, '')
+  return /^\+?[\d\s()\-]+$/.test(phone) && numericPhone.length >= 7 && numericPhone.length <= 15
+}
+
+const validateName = (name: string): boolean => {
+  const trimmed = name.trim()
+  return trimmed.length >= 2 && trimmed.length <= 100
+}
+
+const validateAddress = (address: string): boolean => {
+  const trimmed = address.trim()
+  return trimmed.length >= 5 && trimmed.length <= 200
+}
+
 export const useCheckout = () => {
   const supabase = createClient()
   const { items, totalPrice, clearCart } = usecart()
@@ -109,13 +124,19 @@ export const useCheckout = () => {
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!formState.name.trim())
-      return submitDispatch({ type: 'ERROR', payload: 'Please enter your name' })
+    if (!validateName(formState.name))
+      return submitDispatch({ type: 'ERROR', payload: 'Please enter a valid name (2-100 characters)' })
 
-    if (!formState.phone.trim())
-      return submitDispatch({ type: 'ERROR', payload: 'Please enter your phone number' })
+    if (!validatePhone(formState.phone))
+      return submitDispatch({ type: 'ERROR', payload: 'Please enter a valid phone number' })
 
-    if (!isDeliveryInfoProvided)
+    const hasAddress = deliveryState.address.trim().length > 0
+    const hasCoordinates = deliveryState.lat !== null && deliveryState.lng !== null
+
+    if (!hasCoordinates && (hasAddress && !validateAddress(deliveryState.address)))
+      return submitDispatch({ type: 'ERROR', payload: 'Please enter a valid address (5-200 characters)' })
+
+    if (!hasCoordinates && !hasAddress)
       return submitDispatch({ type: 'ERROR', payload: 'Please provide a delivery address or use your current location' })
 
     submitDispatch({ type: 'SUBMITTING' })
