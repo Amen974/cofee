@@ -13,30 +13,54 @@ const SideBar = () => {
 
   const supabase = createClient()
 
-  const [pendingCount, setPendingCount] = useState<number>(0);
+  const [pendingCount, setPendingCount] = useState<number>(0)
+  const [confirmedReservationsCount, setConfirmedReservationsCount] = useState<number>(0)
 
   useEffect(() => {
-  const fetch = async () => {
-    try {
-      const { count } = await supabase
-        .from('orders')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'pending')
-      setPendingCount(count ?? 0)
-    } catch (error) {
-      console.error(error)
-      setPendingCount(0)
+    const fetch = async () => {
+      try {
+        const { count } = await supabase
+          .from('orders')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'pending')
+        setPendingCount(count ?? 0)
+      } catch (error) {
+        console.error(error)
+        setPendingCount(0)
+      }
     }
-  }
-  fetch()
+    fetch()
 
-  const channel = supabase
-    .channel('pending-count')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, fetch)
-    .subscribe()
+    const channel = supabase
+      .channel('pending-count')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, fetch)
+      .subscribe()
 
-  return () => { supabase.removeChannel(channel) }
-}, [supabase])
+    return () => { supabase.removeChannel(channel) }
+  }, [supabase])
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const { count } = await supabase
+          .from('reservations')
+          .select('*', { count: 'exact', head: true })
+          .eq('status', 'confirmed')
+        setConfirmedReservationsCount(count ?? 0)
+      } catch (error) {
+        console.error(error)
+        setConfirmedReservationsCount(0)
+      }
+    }
+    fetch()
+
+    const channel = supabase
+      .channel('confirmed-reservations-count')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, fetch)
+      .subscribe()
+
+    return () => { supabase.removeChannel(channel) }
+  }, [supabase])
 
   return (
     <aside className="flex-col h-screen text-sm transition-all duration-300 w-70 py-10 px-4 bg-black text-white border-r border-neutral-800 relative hidden md:flex">
@@ -49,7 +73,7 @@ const SideBar = () => {
       <Link href="/dashboard/live-reservations" className={`flex gap-1 py-4 pl-2 rounded-lg active:scale-95 cursor-pointer relative ${pathname === '/dashboard/live-reservations' ? 'bg-red-700 border border-neutral-800' : 'hover:text-red-700'}`}>
         <CalendarCheck size={18} />
         <span>Live Reservations</span>
-        <span className={`px-1.5 absolute right-4 rounded-full text-sm ${pathname === '/dashboard/live-reservations' ? 'bg-white text-red-700' : 'text-white'}`}>0</span>
+        <span className={`px-1.5 absolute right-4 rounded-full text-sm ${pathname === '/dashboard/live-reservations' ? 'bg-white text-red-700' : 'text-white'}`}>{confirmedReservationsCount}</span>
       </Link>
 
       <Link href="/dashboard/menu" className={`flex gap-1 py-4 pl-2 rounded-lg active:scale-95 cursor-pointer ${pathname === '/dashboard/menu' ? 'bg-red-700 border border-neutral-800' : 'hover:text-red-700'}`}>

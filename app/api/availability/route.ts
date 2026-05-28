@@ -43,7 +43,15 @@ export async function GET(req: NextRequest) {
   if (rErr)
     return NextResponse.json({ error: 'Could not load reservations' }, { status: 500 })
 
-  const slots = generateSlots(open_time, close_time, slot_interval, blockDuration)
+  const slots = generateSlots(
+    open_time,
+    close_time,
+    slot_interval,
+    blockDuration,
+    'Africa/Tunis',
+    15,
+    date,
+  )
 
   const available = slots.filter(slot => {
     const seatsUsed = getSeatsInUse(slot, blockDuration, reservations ?? [])

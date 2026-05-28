@@ -2,7 +2,10 @@ export function generateSlots(
   openTime: string,
   closeTime: string,
   intervalMin: number,
-  blockDurationMin: number
+  blockDurationMin: number,
+  timeZone: string,
+  leadTimeMin: number = 0,
+  reservationDate?: string,
 ): string[] {
   const slots: string[] = []
   const [openH, openM] = openTime.split(':').map(Number)
@@ -10,8 +13,27 @@ export function generateSlots(
 
   const openMinutes = openH * 60 + openM
   const closeMinutes = closeH * 60 + closeM
+  let startMinutes = openMinutes
 
-  for (let t = openMinutes; t + blockDurationMin <= closeMinutes; t += intervalMin) {
+  if (reservationDate) {
+    const nowInZone = new Date(new Date().toLocaleString('en-US', { timeZone }))
+
+    const todayIso = `${nowInZone.getFullYear().toString().padStart(4, '0')}-${(nowInZone.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${nowInZone.getDate().toString().padStart(2, '0')}`
+
+    if (reservationDate === todayIso) {
+      const currentMinutes = nowInZone.getHours() * 60 + nowInZone.getMinutes() + leadTimeMin
+      startMinutes = Math.max(openMinutes, currentMinutes)
+
+      const remainder = (startMinutes - openMinutes) % intervalMin
+      if (remainder !== 0) {
+        startMinutes += intervalMin - remainder
+      }
+    }
+  }
+
+  for (let t = startMinutes; t + blockDurationMin <= closeMinutes; t += intervalMin) {
     const h = Math.floor(t / 60).toString().padStart(2, '0')
     const m = (t % 60).toString().padStart(2, '0')
     slots.push(`${h}:${m}`)

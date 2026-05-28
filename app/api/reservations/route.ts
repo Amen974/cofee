@@ -27,9 +27,17 @@ export async function POST(req: NextRequest) {
   if (party_size > max_party_size)
     return NextResponse.json({ error: `Max party size is ${max_party_size}` }, { status: 400 })
 
-  const blockDuration = session_duration + parseInt(cleaning_buffer)
+  const blockDuration = session_duration * 60 + parseInt(cleaning_buffer)
 
-  const validSlots = generateSlots(open_time, close_time, slot_interval, blockDuration)
+  const validSlots = generateSlots(
+    open_time,
+    close_time,
+    slot_interval,
+    blockDuration,
+    'Africa/Tunis',
+    15,
+    date,
+  )
   if (!validSlots.includes(start_time))
     return NextResponse.json({ error: 'Invalid time slot' }, { status: 400 })
 

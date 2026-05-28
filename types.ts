@@ -23,6 +23,24 @@ export type Item = {
   created_at: string;
 }
 
+export type ReservationStatus =
+  | 'confirmed'
+  | 'cancelled'
+  | 'no_show'
+  | 'completed'
+
+export type Reservation = {
+  id: string;
+  reservation_date: string;
+  start_time: string;
+  end_time: string;
+  party_size: number;
+  guest_name: string;
+  guest_phone: string;
+  status: ReservationStatus;
+  created_at: string;
+}
+
 export type FormAction =
   | { type: 'SET_NAME'; payload: string }
   | { type: 'SET_PHONE'; payload: string }
