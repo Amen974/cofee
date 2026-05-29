@@ -37,6 +37,8 @@ export default function LiveReservationsPage() {
     loading,
     filter,
     setFilter,
+    search,
+    setSearch,
     filteredReservations,
     updateStatus,
   } = useReservations()
@@ -61,20 +63,31 @@ export default function LiveReservationsPage() {
 
   return (
     <div className="p-4">
-      <div className="flex gap-2 mb-4 flex-wrap">
-        {RESERVATION_STATUSES.map((status) => (
-          <button
-            key={status}
-            onClick={() => setFilter(status)}
-            className={`text-xs px-3.5 py-1.5 rounded-full border transition-all ${
-              filter === status
-                ? 'bg-red-700 text-white border-transparent'
-                : 'border-neutral-700 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200'
-            }`}
-          >
-            {status.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
-          </button>
-        ))}
+      <div className="flex mb-4 gap-4">
+        <div className="flex flex-1 gap-2 flex-wrap">
+          {RESERVATION_STATUSES.map((status) => (
+            <button
+              key={status}
+              onClick={() => setFilter(status)}
+              className={`text-xs px-3.5 py-1.5 rounded-full border transition-all ${
+                filter === status
+                  ? 'bg-red-700 text-white border-transparent'
+                  : 'border-neutral-700 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200'
+              }`}
+            >
+              {status.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
+            </button>
+          ))}
+        </div>
+        <div>
+          <input
+            type="text"
+            placeholder="Search reservations..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 placeholder:text-neutral-500 focus:ring-1 focus:ring-blue-500 outline-none h-8"
+          />
+        </div>
       </div>
 
       <div className="flex flex-wrap gap-4 justify-center md:justify-start">

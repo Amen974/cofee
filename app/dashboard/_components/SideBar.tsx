@@ -1,85 +1,94 @@
 'use client'
 
-import { useIsOpen } from "@/lib/store/useIsOpen"
 import Link from "next/link"
-import { ScrollText, CalendarCheck, BookOpen } from "lucide-react";
+import { ScrollText, CalendarCheck, BookOpen, LucideIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { useStoreStatus } from "@/lib/hooks/useStoreStatus";
+import { useTableCount } from "@/lib/hooks/useTableCount";
+
+interface NavItem {
+  readonly href: string;
+  readonly label: string;
+  readonly icon: LucideIcon;
+  readonly badgeType?: 'pending' | 'confirmed';
+}
 
 const SideBar = () => {
-  const { setIsOpen, isOpen } = useIsOpen()
   const pathname = usePathname()
+  const { isOpen, toggle } = useStoreStatus()
+  const pendingCount = useTableCount('orders', 'pending')
+  const confirmedReservationsCount = useTableCount('reservations', 'confirmed')
 
-  const supabase = createClient()
+  const navItems: readonly NavItem[] = [
+    {
+      href: '/dashboard/live-orders',
+      label: 'Live Orders',
+      icon: ScrollText,
+      badgeType: 'pending',
+    },
+    {
+      href: '/dashboard/live-reservations',
+      label: 'Live Reservations',
+      icon: CalendarCheck,
+      badgeType: 'confirmed',
+    },
+    {
+      href: '/dashboard/menu',
+      label: 'Menu',
+      icon: BookOpen,
+    },
+  ];
 
-  const [pendingCount, setPendingCount] = useState<number>(0)
-  const [confirmedReservationsCount, setConfirmedReservationsCount] = useState<number>(0)
-
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const { count } = await supabase
-          .from('orders')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'pending')
-        setPendingCount(count ?? 0)
-      } catch (error) {
-        console.error(error)
-        setPendingCount(0)
-      }
+  const getBadgeCount = (badgeType?: string): number | null => {
+    switch (badgeType) {
+      case 'pending':
+        return pendingCount;
+      case 'confirmed':
+        return confirmedReservationsCount;
+      default:
+        return null;
     }
-    fetch()
+  };
 
-    const channel = supabase
-      .channel('pending-count')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, fetch)
-      .subscribe()
+  const isActive = (href: string): boolean => pathname === href;
 
-    return () => { supabase.removeChannel(channel) }
-  }, [supabase])
+  const getNavItemClasses = (href: string): string => {
+    const baseClasses = 'flex gap-1 py-4 pl-2 rounded-lg active:scale-95 cursor-pointer relative';
+    const activeClasses = isActive(href)
+      ? 'bg-red-700 border border-neutral-800'
+      : 'hover:text-red-700';
+    return `${baseClasses} ${activeClasses}`;
+  };
 
-  useEffect(() => {
-    const fetch = async () => {
-      try {
-        const { count } = await supabase
-          .from('reservations')
-          .select('*', { count: 'exact', head: true })
-          .eq('status', 'confirmed')
-        setConfirmedReservationsCount(count ?? 0)
-      } catch (error) {
-        console.error(error)
-        setConfirmedReservationsCount(0)
-      }
-    }
-    fetch()
-
-    const channel = supabase
-      .channel('confirmed-reservations-count')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'reservations' }, fetch)
-      .subscribe()
-
-    return () => { supabase.removeChannel(channel) }
-  }, [supabase])
+  const getBadgeClasses = (href: string): string => {
+    const baseClasses = 'px-1.5 absolute right-4 rounded-full text-sm';
+    const activeClasses = isActive(href)
+      ? 'bg-white text-red-700'
+      : 'text-white';
+    return `${baseClasses} ${activeClasses}`;
+  };
 
   return (
-    <aside className="flex-col h-screen text-sm transition-all duration-300 w-70 py-10 px-4 bg-black text-white border-r border-neutral-800 relative hidden md:flex">
-      <Link href="/dashboard/live-orders" className={`flex gap-1 py-4 pl-2 rounded-lg active:scale-95 cursor-pointer relative ${pathname === '/dashboard/live-orders' ? 'bg-red-700 border border-neutral-800' : 'hover:text-red-700'}`}>
-        <ScrollText size={18} />
-        <span>Live Orders</span>
-        <span className={`px-1.5 absolute right-4 rounded-full text-sm ${pathname === '/dashboard/live-orders' ? 'bg-white text-red-700' : 'text-white'}`}>{pendingCount}</span>
-      </Link>
-
-      <Link href="/dashboard/live-reservations" className={`flex gap-1 py-4 pl-2 rounded-lg active:scale-95 cursor-pointer relative ${pathname === '/dashboard/live-reservations' ? 'bg-red-700 border border-neutral-800' : 'hover:text-red-700'}`}>
-        <CalendarCheck size={18} />
-        <span>Live Reservations</span>
-        <span className={`px-1.5 absolute right-4 rounded-full text-sm ${pathname === '/dashboard/live-reservations' ? 'bg-white text-red-700' : 'text-white'}`}>{confirmedReservationsCount}</span>
-      </Link>
-
-      <Link href="/dashboard/menu" className={`flex gap-1 py-4 pl-2 rounded-lg active:scale-95 cursor-pointer ${pathname === '/dashboard/menu' ? 'bg-red-700 border border-neutral-800' : 'hover:text-red-700'}`}>
-        <BookOpen size={18} />
-        <span>Menu</span>
-      </Link>
+    <aside className="flex-col min-h-screen text-sm transition-all duration-300 w-70 py-10 px-4 bg-black text-white border-r border-neutral-800 relative hidden md:flex">
+      {navItems.map((item) => {
+        const Icon = item.icon;
+        const badgeCount = getBadgeCount(item.badgeType);
+        return (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={getNavItemClasses(item.href)}
+          >
+            <Icon size={18} />
+            <span>{item.label}</span>
+            {badgeCount !== null && (
+              <span className={getBadgeClasses(item.href)}>
+                {badgeCount}
+              </span>
+            )}
+          </Link>
+        );
+      })}
 
       <div className="flex border border-neutral-800 p-2 rounded-xl items-center absolute bottom-5 w-[90%]">
         <div className="flex flex-col flex-1">
@@ -87,7 +96,7 @@ const SideBar = () => {
           <span>{isOpen ? 'Open' : 'Close'}</span>
         </div>
         <button
-          onClick={setIsOpen}
+          onClick={toggle}
           className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors cursor-pointer ${isOpen ? 'bg-red-700' : 'bg-neutral-800'
             }`}
         >

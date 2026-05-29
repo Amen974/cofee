@@ -1,15 +1,10 @@
 'use client'
 
-import { useEffect } from "react"
-import { useIsOpen } from "@/lib/store/useIsOpen"
+import { useStoreStatus } from "@/lib/hooks/useStoreStatus"
 
 const IsOpen = () => {
-  const { isOpen, fetchIsOpen } = useIsOpen()
-
-  useEffect(() => {
-    fetchIsOpen()
-  }, [fetchIsOpen])
-
+  const { isOpen } = useStoreStatus()
+  
   return (
     <>
       {!isOpen && (

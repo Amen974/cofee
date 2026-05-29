@@ -26,16 +26,6 @@ const BestSellers = () => {
           loading="eager"
           className="object-contain object-left"
         />
-
-        <div className="w-full h-full flex justify-center items-center">
-          <div>
-            
-          </div>
-
-          <div>
-
-          </div>
-        </div>
       </div>
 
       <div className="relative bg-black h-[26vh] md:h-[45vh]">

@@ -13,6 +13,8 @@ export interface UseOrdersResult {
   loading: boolean;
   filter: Filter;
   setFilter: React.Dispatch<React.SetStateAction<Filter>>;
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
   filteredOrders: Orders[];
   updateStatus: (id: string, status: Filter) => Promise<void>;
 }
@@ -21,6 +23,7 @@ export const useOrders = (): UseOrdersResult => {
   const [orders, setOrders] = useState<Orders[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [filter, setFilter] = useState<Filter>("pending");
+  const [search, setSearch] = useState("")
 
   const updateStatus = async (id: string, status: Filter): Promise<void> => {
     let previous: string | undefined;
@@ -89,10 +92,16 @@ export const useOrders = (): UseOrdersResult => {
     };
   }, []);
 
-  const filteredOrders = useMemo(
-    () => orders.filter((order) => order.status === filter),
-    [orders, filter],
-  );
+  const filteredOrders = useMemo(() => {
+    const byStatus = orders.filter((order) => order.status === filter);
+    if (!search) return byStatus;
+    const q = search.toLowerCase();
+    return byStatus.filter((o) =>
+      o.customer_name.toLowerCase().includes(q) ||
+      String(o.phone).includes(q) ||
+      o.id.toLowerCase().includes(q),
+    );
+  }, [orders, filter, search]);
 
   return {
     STATUSES,
@@ -100,6 +109,8 @@ export const useOrders = (): UseOrdersResult => {
     loading,
     filter,
     setFilter,
+    search,
+    setSearch,
     filteredOrders,
     updateStatus,
   };

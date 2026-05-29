@@ -18,6 +18,8 @@ export interface UseReservationsResult {
   readonly loading: boolean;
   readonly filter: ReservationFilter;
   readonly setFilter: React.Dispatch<React.SetStateAction<ReservationFilter>>;
+  readonly search: string;
+  readonly setSearch: React.Dispatch<React.SetStateAction<string>>;
   readonly filteredReservations: Reservation[];
   readonly updateStatus: (id: string, status: ReservationFilter) => Promise<void>;
 }
@@ -26,6 +28,7 @@ export const useReservations = (): UseReservationsResult => {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [loading, setLoading] = useState<boolean>(true)
   const [filter, setFilter] = useState<ReservationFilter>('confirmed')
+  const [search, setSearch] = useState<string>('')
 
   const updateStatus = async (id: string, status: ReservationFilter): Promise<void> => {
     let previousStatus: ReservationStatus | undefined
@@ -109,10 +112,16 @@ export const useReservations = (): UseReservationsResult => {
     }
   }, [])
 
-  const filteredReservations = useMemo(
-    () => reservations.filter((reservation) => reservation.status === filter),
-    [reservations, filter],
-  )
+  const filteredReservations = useMemo(() => {
+    const byStatus = reservations.filter((reservation) => reservation.status === filter)
+    if (!search) return byStatus
+    const q = search.toLowerCase()
+    return byStatus.filter((r) =>
+      r.guest_name.toLowerCase().includes(q) ||
+      String(r.guest_phone).includes(q) ||
+      r.id.toLowerCase().includes(q),
+    )
+  }, [reservations, filter, search])
 
   return {
     RESERVATION_STATUSES,
@@ -120,6 +129,8 @@ export const useReservations = (): UseReservationsResult => {
     loading,
     filter,
     setFilter,
+    search,
+    setSearch,
     filteredReservations,
     updateStatus,
   }

@@ -107,3 +107,5 @@ export type UseBookingResult = {
 }
 
 export type Status = 'idle' | 'loading' | 'error' | 'success' | 'itemAdded'
+
+export type ItemForm = Omit<Item, "id" | "created_at">

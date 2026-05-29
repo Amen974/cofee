@@ -1,16 +1,20 @@
-'use client'
+import { createClient } from "@/lib/supabase/server";
+import { cookies } from "next/headers" 
+import MenuDashboardClient from "./MenuDashboardClient";
 
-export default function MenuPage() {
-  return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-white">Menu Management</h1>
-        <p className="text-gray-400">Create, edit, and manage menu items</p>
-      </div>
+export default async function MenuPage() {
+  const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
 
-      <div className="bg-gray-800/50 border border-gray-700 rounded-lg p-8 text-center">
-        <p className="text-gray-400">Coming soon...</p>
-      </div>
-    </div>
-  )
+  const { data: items, error } = await supabase
+      .from("menu_items")
+      .select("*")
+  
+    if (error) {
+      console.error("Error fetching menu items:", error);
+      return <div>Error fetching menu items.</div>;
+    }
+  
+    return <MenuDashboardClient items={items ?? []} />;
+
 }
