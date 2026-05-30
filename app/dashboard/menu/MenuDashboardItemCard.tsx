@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { Item } from "@/types"
-import { updateIsAvailable } from "./actions"
+import { deleteItem, updateIsAvailable } from "./actions"
 import MenuItemForm from "./MenuItemForm"
 
 export default function MenuDashboardItemCard({ item }: { item: Item }) {
@@ -47,7 +47,7 @@ export default function MenuDashboardItemCard({ item }: { item: Item }) {
         </button>
 
         <button
-          onClick={() => {}}
+          onClick={() => {deleteItem(item.id)}}
           className="bg-red-600 text-white py-2 rounded-xl font-semibold
             hover:bg-red-700 transition-colors active:scale-95 cursor-pointer"
         >

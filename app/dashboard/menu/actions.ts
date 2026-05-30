@@ -19,14 +19,27 @@ export async function addItem(formData: ItemForm) {
   return { success: true };
 }
 
-export async function deleteItem(id: number) {
+export async function deleteItem(id: string) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
+
+  const { data: item, error: fetchError } = await supabase
+    .from("menu_items")
+    .select("image_url")
+    .eq("id", id)
+    .single();
+
+  if (fetchError) return { success: false, error: fetchError.message };
+
+  if (item.image_url) {
+    const path = item.image_url.split("/cofee_imgs/")[1];
+    await supabase.storage.from("cofee_imgs").remove([decodeURIComponent(path)]);
+  }
 
   const { error } = await supabase
     .from("menu_items")
     .delete()
-    .eq("id", id)
+    .eq("id", id);
 
   if (error) return { success: false, error: error.message };
 
@@ -68,7 +81,7 @@ export async function uploadImage(file: File) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const fileName = `${Date.now()}-${file.name}`;
+  const fileName = `${file.name}`;
 
   const { error } = await supabase.storage
     .from("cofee_imgs")
@@ -91,6 +104,19 @@ export async function updateIsAvailable(id: string, isAvailable: boolean) {
     .from("menu_items")
     .update({ is_available: isAvailable })
     .eq("id", id)
+
+  if (error) return { success: false, error: error.message };
+
+  return { success: true };
+}
+
+export async function deleteImage(fileUrl: string) {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const fileName = fileUrl.split("/cofee_imgs/")[1];
+
+  const { error } = await supabase.storage.from("cofee_imgs").remove([decodeURIComponent(fileName)]);
 
   if (error) return { success: false, error: error.message };
 

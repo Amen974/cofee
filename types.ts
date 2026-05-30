@@ -9,25 +9,25 @@ export type Orders = {
   notes: string;
   items: Item[];
   total_price: number;
-  address: string
-}
+  address: string;
+};
 
 export type Item = {
   id: string;
   name: string;
-  quantity: number
+  quantity: number;
   description: string;
   price: number;
   image_url: string;
   is_available: boolean;
   created_at: string;
-}
+};
 
 export type ReservationStatus =
-  | 'confirmed'
-  | 'cancelled'
-  | 'no_show'
-  | 'completed'
+  | "confirmed"
+  | "cancelled"
+  | "no_show"
+  | "completed";
 
 export type Reservation = {
   id: string;
@@ -39,91 +39,91 @@ export type Reservation = {
   guest_phone: string;
   status: ReservationStatus;
   created_at: string;
-}
+};
 
 export type FormAction =
-  | { type: 'SET_NAME'; payload: string }
-  | { type: 'SET_PHONE'; payload: string }
-  | { type: 'SET_NOTES'; payload: string }
-  | { type: 'RESET' }
+  | { type: "SET_NAME"; payload: string }
+  | { type: "SET_PHONE"; payload: string }
+  | { type: "SET_NOTES"; payload: string }
+  | { type: "RESET" };
 
 export type DeliveryAction =
-  | { type: 'SET_ADDRESS'; payload: string }
-  | { type: 'SET_COORDINATES'; payload: { lat: number; lng: number } }
-  | { type: 'RESET' }
+  | { type: "SET_ADDRESS"; payload: string }
+  | { type: "SET_COORDINATES"; payload: { lat: number; lng: number } }
+  | { type: "RESET" };
 
 export type SubmitAction =
-  | { type: 'SUBMITTING' }
-  | { type: 'SUCCESS' }
-  | { type: 'ERROR'; payload: string }
-  | { type: 'RESET' }
+  | { type: "SUBMITTING" }
+  | { type: "SUCCESS" }
+  | { type: "ERROR"; payload: string }
+  | { type: "RESET" };
 
 export type ReservationSettings = {
-  readonly max_party_size: number
-  readonly min_party_size: number
-  readonly max_booking_days: number
-}
+  readonly max_party_size: number;
+  readonly min_party_size: number;
+  readonly max_booking_days: number;
+};
 
-export type Slot = string
+export type Slot = string;
 
 export type BookingState = {
-  readonly date: string
-  readonly partySize: number
-  readonly slots: Slot[]
-  readonly selected: string | null
-  readonly guestName: string
-  readonly guestPhone: string
-}
+  readonly date: string;
+  readonly partySize: number;
+  readonly slots: Slot[];
+  readonly selected: string | null;
+  readonly guestName: string;
+  readonly guestPhone: string;
+};
 
 export type BookingAction =
-  | { type: 'setDate'; payload: string }
-  | { type: 'setPartySize'; payload: number }
-  | { type: 'setSlots'; payload: Slot[] }
-  | { type: 'setSelected'; payload: string | null }
-  | { type: 'setGuestName'; payload: string }
-  | { type: 'setGuestPhone'; payload: string }
-  | { type: 'resetForm' }
+  | { type: "setDate"; payload: string }
+  | { type: "setPartySize"; payload: number }
+  | { type: "setSlots"; payload: Slot[] }
+  | { type: "setSelected"; payload: string | null }
+  | { type: "setGuestName"; payload: string }
+  | { type: "setGuestPhone"; payload: string }
+  | { type: "resetForm" };
 
 export type BookingStatus = {
-  readonly loading: boolean
-  readonly error: string
-  readonly success: string
-}
+  readonly loading: boolean;
+  readonly error: string;
+  readonly success: string;
+};
 
 export type UseBookingResult = {
-  readonly state: BookingState
-  readonly status: BookingStatus
-  readonly minPartySize: number
-  readonly maxPartySize: number
-  readonly maxBookingDays: number
-  readonly maxBookingDate: string
-  readonly partySizeOptions: number[]
-  readonly setDate: (date: string) => void
-  readonly setPartySize: (size: number) => void
-  readonly setSelected: (slot: string | null) => void
-  readonly setGuestName: (name: string) => void
-  readonly setGuestPhone: (phone: string) => void
-  readonly book: () => Promise<void>
-}
+  readonly state: BookingState;
+  readonly status: BookingStatus;
+  readonly minPartySize: number;
+  readonly maxPartySize: number;
+  readonly maxBookingDays: number;
+  readonly maxBookingDate: string;
+  readonly partySizeOptions: number[];
+  readonly setDate: (date: string) => void;
+  readonly setPartySize: (size: number) => void;
+  readonly setSelected: (slot: string | null) => void;
+  readonly setGuestName: (name: string) => void;
+  readonly setGuestPhone: (phone: string) => void;
+  readonly book: () => Promise<void>;
+};
 
-export type Status = 'idle' | 'loading' | 'error' | 'success' | 'itemAdded'
+export type Status = "idle" | "loading" | "error" | "success" | "itemAdded";
 
-export type ItemForm = Omit<Item, "id" | "created_at">
+export type ItemForm = Omit<Item, "id" | "created_at">;
 
 export type MenuItemFormProps = {
-  readonly item: Item
-  readonly setIsUpdating: (isUpdating: boolean) => void
-}
+  readonly item: Item;
+  readonly setIsUpdating: (isUpdating: boolean) => void;
+};
 
 export type FormState = {
-  readonly description: string
-  readonly imageUrl: string
-  readonly isSaving: boolean
-  readonly isUploadingImage: boolean
-  readonly name: string
-  readonly price: string
-  readonly quantity: string
-}
+  readonly description: string;
+  readonly imageUrl: string;
+  readonly isSaving: boolean;
+  readonly isUploadingImage: boolean;
+  readonly name: string;
+  readonly price: string;
+  readonly quantity: string;
+};
 
 export type FormMenuItemAction =
   | { type: "SET_DESCRIPTION"; payload: string }
@@ -132,4 +132,26 @@ export type FormMenuItemAction =
   | { type: "SET_IS_UPLOADING_IMAGE"; payload: boolean }
   | { type: "SET_NAME"; payload: string }
   | { type: "SET_PRICE"; payload: string }
+  | { type: "SET_QUANTITY"; payload: string };
+
+export type AddMenuItemState = {
+  isOpen: boolean;
+  name: string;
+  description: string;
+  price: string;
+  quantity: string;
+  imageUrl: string;
+  isSaving: boolean;
+  isUploadingImage: boolean;
+};
+
+export type AddMenuItemAction =
+  | { type: "SET_IS_OPEN"; payload: boolean }
+  | { type: "SET_NAME"; payload: string }
+  | { type: "SET_DESCRIPTION"; payload: string }
+  | { type: "SET_PRICE"; payload: string }
   | { type: "SET_QUANTITY"; payload: string }
+  | { type: "SET_IMAGE_URL"; payload: string }
+  | { type: "SET_IS_SAVING"; payload: boolean }
+  | { type: "SET_IS_UPLOADING_IMAGE"; payload: boolean }
+  | { type: "RESET" };

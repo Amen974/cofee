@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useReducer } from "react"
 import { FormMenuItemAction, FormState, ItemForm, MenuItemFormProps } from "@/types"
-import { updateItem, uploadImage } from "./actions"
+import { deleteImage, updateItem, uploadImage } from "./actions"
 
 const formReducer = (state: FormState, action: FormMenuItemAction): FormState => {
   switch (action.type) {
@@ -51,6 +51,7 @@ export const useMenuItemForm = (item: MenuItemFormProps["item"], setIsUpdating: 
 
     try {
       await updateItem(item.id, formData)
+      await deleteImage(item.image_url)
     } catch (error) {
       console.error("Error updating item:", error)
     } finally {
@@ -77,6 +78,7 @@ export const useMenuItemForm = (item: MenuItemFormProps["item"], setIsUpdating: 
       if (uploadResult.url) {
         dispatch({ type: "SET_IMAGE_URL", payload: uploadResult.url })
       }
+
     } catch (error) {
       console.error("Error uploading image:", error)
     } finally {

@@ -2,6 +2,7 @@
 
 import { Item } from "@/types"
 import MenuDashboardItemCard from "./MenuDashboardItemCard"
+import AddMenuItem from "./AddMenuItem"
 
 const MenuDashboardClient = ({ items }: { items: Item[] }) => {
   return (
@@ -15,6 +16,7 @@ const MenuDashboardClient = ({ items }: { items: Item[] }) => {
         {items.map((item) => (
           <MenuDashboardItemCard key={item.id} item={item} />
         ))}
+        <AddMenuItem />
       </div>
     </main>
   )
