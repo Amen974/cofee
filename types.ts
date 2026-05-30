@@ -109,3 +109,27 @@ export type UseBookingResult = {
 export type Status = 'idle' | 'loading' | 'error' | 'success' | 'itemAdded'
 
 export type ItemForm = Omit<Item, "id" | "created_at">
+
+export type MenuItemFormProps = {
+  readonly item: Item
+  readonly setIsUpdating: (isUpdating: boolean) => void
+}
+
+export type FormState = {
+  readonly description: string
+  readonly imageUrl: string
+  readonly isSaving: boolean
+  readonly isUploadingImage: boolean
+  readonly name: string
+  readonly price: string
+  readonly quantity: string
+}
+
+export type FormMenuItemAction =
+  | { type: "SET_DESCRIPTION"; payload: string }
+  | { type: "SET_IMAGE_URL"; payload: string }
+  | { type: "SET_IS_SAVING"; payload: boolean }
+  | { type: "SET_IS_UPLOADING_IMAGE"; payload: boolean }
+  | { type: "SET_NAME"; payload: string }
+  | { type: "SET_PRICE"; payload: string }
+  | { type: "SET_QUANTITY"; payload: string }

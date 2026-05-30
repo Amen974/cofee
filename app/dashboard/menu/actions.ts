@@ -34,7 +34,7 @@ export async function deleteItem(id: number) {
   return { success: true };
 }
 
-export async function updateItem(id: number, formData: ItemForm) {
+export async function updateItem(id: string, formData: ItemForm) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -49,7 +49,7 @@ export async function updateItem(id: number, formData: ItemForm) {
   return { success: true };
 }
 
-export async function toggleAvailability(id: number, isAvailable: boolean) {
+export async function toggleAvailability(id: string, isAvailable: boolean) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -81,4 +81,18 @@ export async function uploadImage(file: File) {
     .getPublicUrl(fileName);
 
   return { success: true, url: data.publicUrl };
+}
+
+export async function updateIsAvailable(id: string, isAvailable: boolean) {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const { error } = await supabase
+    .from("menu_items")
+    .update({ is_available: isAvailable })
+    .eq("id", id)
+
+  if (error) return { success: false, error: error.message };
+
+  return { success: true };
 }
