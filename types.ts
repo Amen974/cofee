@@ -155,3 +155,17 @@ export type AddMenuItemAction =
   | { type: "SET_IS_SAVING"; payload: boolean }
   | { type: "SET_IS_UPLOADING_IMAGE"; payload: boolean }
   | { type: "RESET" };
+
+export type SettingsForm = {
+  open_time: string
+  close_time: string
+  slot_interval: number
+  total_capacity: number
+  session_duration: number
+  cleaning_buffer: number
+  max_party_size: number
+  min_party_size: number
+  max_booking_days: number
+  tax_rate: number
+  delivery_fee: number
+}

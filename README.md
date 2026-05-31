@@ -63,7 +63,6 @@ create table public.reservations (
 create index IF not exists idx_reservations_date_status on public.reservations using btree (reservation_date, status) TABLESPACE pg_default;
 
 create table public.restaurant_settings (
-  id serial not null,
   open_time time without time zone not null,
   close_time time without time zone not null,
   slot_interval integer not null,
@@ -71,11 +70,12 @@ create table public.restaurant_settings (
   session_duration smallint null,
   cleaning_buffer integer null,
   max_party_size smallint not null default '10'::smallint,
-  isopen boolean not null,
+  isopen boolean not null default true,
   tax_rate numeric(5, 2) not null default 0,
   delivery_fee numeric(10, 2) not null default 0,
   min_party_size smallint not null default '2'::smallint,
   max_booking_days smallint not null default '30'::smallint,
+  id uuid not null default gen_random_uuid (),
   constraint restaurant_settings_pkey primary key (id)
 ) TABLESPACE pg_default;
 
@@ -84,9 +84,9 @@ create table public.restaurant_settings (
  ┃ ┣ 📂(home)
  ┃ ┃ ┣ 📂cart
  ┃ ┃ ┃ ┣ 📂checkout
- ┃ ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┃ ┣ 📜page.tsx
- ┃ ┃ ┃ ┗ 📜useCheckout.ts
+ ┃ ┃ ┃ ┃ ┣ 📜page.tsx
+ ┃ ┃ ┃ ┃ ┗ 📜useCheckout.ts
+ ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┣ 📂menu
  ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┣ 📂reservation
@@ -107,15 +107,25 @@ create table public.restaurant_settings (
  ┃ ┗ 📂reservations
  ┃ ┃ ┗ 📜route.ts
  ┣ 📂components
+ ┃ ┣ 📜CartButton.tsx
  ┃ ┣ 📜IsOpen.tsx
  ┃ ┗ 📜Navbar.tsx
  ┣ 📂dashboard
  ┃ ┣ 📂live-orders
- ┃ ┃ ┗ 📜page.tsx
+ ┃ ┃ ┣ 📜page.tsx
+ ┃ ┃ ┗ 📜useOrders.ts
  ┃ ┣ 📂live-reservations
  ┃ ┃ ┣ 📜page.tsx
- ┃ ┃ ┗ 📜pages.tsx
+ ┃ ┃ ┗ 📜useReservations.ts
  ┃ ┣ 📂menu
+ ┃ ┃ ┣ 📜actions.ts
+ ┃ ┃ ┣ 📜AddMenuItem.tsx
+ ┃ ┃ ┣ 📜MenuDashboardClient.tsx
+ ┃ ┃ ┣ 📜MenuDashboardItemCard.tsx
+ ┃ ┃ ┣ 📜MenuItemForm.tsx
+ ┃ ┃ ┣ 📜page.tsx
+ ┃ ┃ ┗ 📜useMenuItemForm.ts
+ ┃ ┣ 📂restaurant_settings
  ┃ ┃ ┗ 📜page.tsx
  ┃ ┣ 📂_components
  ┃ ┃ ┗ 📜SideBar.tsx

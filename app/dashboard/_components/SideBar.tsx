@@ -1,7 +1,7 @@
 'use client'
 
 import Link from "next/link"
-import { ScrollText, CalendarCheck, BookOpen, LucideIcon } from "lucide-react";
+import { ScrollText, CalendarCheck, BookOpen, LucideIcon, Settings } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useStoreStatus } from "@/lib/hooks/useStoreStatus";
 import { useTableCount } from "@/lib/hooks/useTableCount";
@@ -36,6 +36,11 @@ const SideBar = () => {
       href: '/dashboard/menu',
       label: 'Menu',
       icon: BookOpen,
+    },
+    {
+      href: '/dashboard/restaurant_settings',
+      label: 'Restaurant Settings',
+      icon: Settings,
     },
   ];
 

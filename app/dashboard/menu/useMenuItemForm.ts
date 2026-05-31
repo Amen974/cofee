@@ -1,29 +1,40 @@
-import { ChangeEvent, FormEvent, useReducer } from "react"
-import { FormMenuItemAction, FormState, ItemForm, MenuItemFormProps } from "@/types"
-import { deleteImage, updateItem, uploadImage } from "./actions"
+import { ChangeEvent, FormEvent, useReducer } from "react";
+import {
+  FormMenuItemAction,
+  FormState,
+  ItemForm,
+  MenuItemFormProps,
+} from "@/types";
+import { deleteImage, updateItem, uploadImage } from "./actions";
 
-const formReducer = (state: FormState, action: FormMenuItemAction): FormState => {
+const formReducer = (
+  state: FormState,
+  action: FormMenuItemAction,
+): FormState => {
   switch (action.type) {
     case "SET_DESCRIPTION":
-      return { ...state, description: action.payload }
+      return { ...state, description: action.payload };
     case "SET_IMAGE_URL":
-      return { ...state, imageUrl: action.payload }
+      return { ...state, imageUrl: action.payload };
     case "SET_IS_SAVING":
-      return { ...state, isSaving: action.payload }
+      return { ...state, isSaving: action.payload };
     case "SET_IS_UPLOADING_IMAGE":
-      return { ...state, isUploadingImage: action.payload }
+      return { ...state, isUploadingImage: action.payload };
     case "SET_NAME":
-      return { ...state, name: action.payload }
+      return { ...state, name: action.payload };
     case "SET_PRICE":
-      return { ...state, price: action.payload }
+      return { ...state, price: action.payload };
     case "SET_QUANTITY":
-      return { ...state, quantity: action.payload }
+      return { ...state, quantity: action.payload };
     default:
-      return state
+      return state;
   }
-}
+};
 
-export const useMenuItemForm = (item: MenuItemFormProps["item"], setIsUpdating: MenuItemFormProps["setIsUpdating"]) => {
+export const useMenuItemForm = (
+  item: MenuItemFormProps["item"],
+  setIsUpdating: MenuItemFormProps["setIsUpdating"],
+) => {
   const [state, dispatch] = useReducer(formReducer, {
     description: item.description,
     imageUrl: item.image_url,
@@ -32,13 +43,23 @@ export const useMenuItemForm = (item: MenuItemFormProps["item"], setIsUpdating: 
     name: item.name,
     price: item.price.toString(),
     quantity: item.quantity.toString(),
-  })
+  });
 
-  const { description, imageUrl, isSaving, isUploadingImage, name, price, quantity } = state
+  const {
+    description,
+    imageUrl,
+    isSaving,
+    isUploadingImage,
+    name,
+    price,
+    quantity,
+  } = state;
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
-    event.preventDefault()
-    dispatch({ type: "SET_IS_SAVING", payload: true })
+  const handleSubmit = async (
+    event: FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
+    event.preventDefault();
+    dispatch({ type: "SET_IS_SAVING", payload: true });
 
     const formData: ItemForm = {
       name: state.name,
@@ -47,44 +68,47 @@ export const useMenuItemForm = (item: MenuItemFormProps["item"], setIsUpdating: 
       quantity: Number(state.quantity),
       image_url: state.imageUrl,
       is_available: item.is_available,
-    }
+    };
 
     try {
-      await updateItem(item.id, formData)
-      await deleteImage(item.image_url)
+      await updateItem(item.id, formData);
+      if (imageUrl !== item.image_url) {
+        await deleteImage(item.image_url);
+      }
     } catch (error) {
-      console.error("Error updating item:", error)
+      console.error("Error updating item:", error);
     } finally {
-      setIsUpdating(false)
-      dispatch({ type: "SET_IS_SAVING", payload: false })
+      setIsUpdating(false);
+      dispatch({ type: "SET_IS_SAVING", payload: false });
     }
-  }
+  };
 
-  const handleImageChange = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
-    const file = event.target.files?.[0]
+  const handleImageChange = async (
+    event: ChangeEvent<HTMLInputElement>,
+  ): Promise<void> => {
+    const file = event.target.files?.[0];
 
-    if (!file) return
+    if (!file) return;
 
-    dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: true })
+    dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: true });
 
     try {
-      const uploadResult = await uploadImage(file)
+      const uploadResult = await uploadImage(file);
 
       if (!uploadResult.success) {
-        console.error("Image upload failed:", uploadResult.error)
-        return
+        console.error("Image upload failed:", uploadResult.error);
+        return;
       }
 
       if (uploadResult.url) {
-        dispatch({ type: "SET_IMAGE_URL", payload: uploadResult.url })
+        dispatch({ type: "SET_IMAGE_URL", payload: uploadResult.url });
       }
-
     } catch (error) {
-      console.error("Error uploading image:", error)
+      console.error("Error uploading image:", error);
     } finally {
-      dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: false })
+      dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: false });
     }
-  }
+  };
 
   return {
     state,
@@ -98,7 +122,7 @@ export const useMenuItemForm = (item: MenuItemFormProps["item"], setIsUpdating: 
     quantity,
     handleSubmit,
     handleImageChange,
-  }
-}
+  };
+};
 
-export default useMenuItemForm
+export default useMenuItemForm;
