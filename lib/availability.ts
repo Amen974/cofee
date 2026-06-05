@@ -4,7 +4,7 @@ export function generateSlots(
   intervalMin: number,
   blockDurationMin: number,
   timeZone: string,
-  leadTimeMin: number = 0,
+  leadTimeMin: number,
   reservationDate?: string,
 ): string[] {
   const slots: string[] = []

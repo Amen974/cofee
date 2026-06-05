@@ -3,7 +3,7 @@
 @layer base {
   body {
     scroll-behavior: smooth;
-    font-family: var(--font-nunito), sans-serif;
+    font-family: var(--font-cinzel), sans-serif;
   }
 
   h1, h2, h3 {
@@ -13,11 +13,4 @@
 
 .dancing{
   font-family: var(--font-dancing), cursive;
-}
-
-.background_img{
-  background-image:url('/coffee-beans-1(1) try.webp');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
 }

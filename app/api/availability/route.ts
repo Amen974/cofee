@@ -10,7 +10,8 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const date = searchParams.get('date')
   const partySizeRaw = searchParams.get('party_size')
-
+  const timeZone = searchParams.get('time_zone') || 'UTC'
+  const leadTimeMin = parseInt(searchParams.get('lead_time_min') || '0')
   if (!date || !partySizeRaw)
     return NextResponse.json({ error: 'date and party_size are required' }, { status: 400 })
 
@@ -48,8 +49,8 @@ export async function GET(req: NextRequest) {
     close_time,
     slot_interval,
     blockDuration,
-    'Africa/Tunis',
-    15,
+    timeZone,
+    leadTimeMin,
     date,
   )
 

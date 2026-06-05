@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Nunito, Dancing_Script } from 'next/font/google'
 import "./globals.css";
+import CustomCursor from "./components/CustomCursor";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -29,6 +30,7 @@ export default function RootLayout({
       className={`${nunito.variable} ${dancing.variable} h-full antialiased`}
     >
       <body className="min-h-full">
+        <CustomCursor />
         {children}
       </body>
     </html>

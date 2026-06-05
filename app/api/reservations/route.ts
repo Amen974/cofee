@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const supabase = createClient(cookieStore)
 
   const body = await req.json()
-  const { date, start_time, party_size, guest_name, guest_phone } = body
+  const { date, start_time, party_size, guest_name, guest_phone, timeZone, leadTimeMin } = body
 
   if (!date || !start_time || !party_size || !guest_name || !guest_phone)
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
@@ -27,15 +27,15 @@ export async function POST(req: NextRequest) {
   if (party_size > max_party_size)
     return NextResponse.json({ error: `Max party size is ${max_party_size}` }, { status: 400 })
 
-  const blockDuration = session_duration * 60 + parseInt(cleaning_buffer)
+  const blockDuration = session_duration + cleaning_buffer
 
   const validSlots = generateSlots(
     open_time,
     close_time,
     slot_interval,
     blockDuration,
-    'Africa/Tunis',
-    15,
+    timeZone,
+    leadTimeMin,
     date,
   )
   if (!validSlots.includes(start_time))

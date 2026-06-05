@@ -8,11 +8,13 @@ export default function PublicLayout({
   children: React.ReactNode
 }) {
   return (
-    <div>
-      <Navbar />
+    <>
       <IsOpen />
       <CartButton />
-      <main>{children}</main>
-    </div>
+      <main className="bg-[#0E0D0B] relative">
+        <Navbar />
+        {children}
+      </main>
+    </>
   )
 }
