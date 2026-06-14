@@ -16,18 +16,18 @@ export async function POST(req: NextRequest) {
   const { data: settings, error: sErr } = await supabase
     .from('restaurant_settings')
     .select('*')
-    .single()
+    .maybeSingle()
 
   if (sErr || !settings)
     return NextResponse.json({ error: 'Could not load settings' }, { status: 500 })
 
   const { open_time, close_time, slot_interval, total_capacity,
-          session_duration, cleaning_buffer, max_party_size } = settings
+        session_duration_min, cleaning_buffer_min, max_party_size } = settings
 
   if (party_size > max_party_size)
     return NextResponse.json({ error: `Max party size is ${max_party_size}` }, { status: 400 })
 
-  const blockDuration = session_duration + cleaning_buffer
+  const blockDuration = session_duration_min + cleaning_buffer_min
 
   const validSlots = generateSlots(
     open_time,

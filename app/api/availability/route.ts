@@ -28,12 +28,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: 'Could not load settings' }, { status: 500 })
 
   const { open_time, close_time, slot_interval, total_capacity,
-          session_duration, cleaning_buffer, max_party_size } = settings
+        session_duration_min, cleaning_buffer_min, max_party_size } = settings
 
   if (partySize > max_party_size)
     return NextResponse.json({ error: `Max party size is ${max_party_size}` }, { status: 400 })
 
-  const blockDuration = session_duration + cleaning_buffer
+  const blockDuration = session_duration_min + cleaning_buffer_min
 
   const { data: reservations, error: rErr } = await supabase
     .from('reservations')

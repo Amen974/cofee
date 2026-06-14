@@ -18,11 +18,11 @@ export default async function Page() {
   const { data, error } = await supabase
     .from('restaurant_settings')
     .select('min_party_size, max_party_size, max_booking_days')
-    .single()
+    .maybeSingle()
 
   const isValid = isValidSettings(data as ReservationSettings)
   const reservationSettings = isValid ? (data as ReservationSettings) : {
-    min_party_size: 2,
+    min_party_size: 1,
     max_party_size: 10,
     max_booking_days: 30
   }

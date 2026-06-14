@@ -85,13 +85,15 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
 
         if (!response.ok) {
           setStatus(createStatus({ error: data.error ?? 'Unable to load availability.' }))
+          console.error('Error fetching availability:', data.error)
           return
         }
 
         dispatch({ type: 'setSlots', payload: data.available_slots ?? [] })
         setStatus(createStatus({}))
-      } catch {
+      } catch (error) {
         setStatus(createStatus({ error: 'Unable to load availability. Please try again.' }))
+        console.error('Error fetching availability:', error)
       }
     }
 
@@ -100,7 +102,7 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
     }
 
     fetchAvailability()
-  }, [state.date, state.partySize, state.partySize])
+  }, [state.date, state.partySize])
 
   useEffect(() => {
     if (state.partySize < minPartySize) {
@@ -167,6 +169,8 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
 
       if (!response.ok) {
         setStatus(createStatus({ error: data.error ?? 'Reservation failed.' }))
+        setCartStatus('error', data.error ?? 'Reservation failed.')
+        console.error('Error placing reservation:', data.error)
         return
       }
 
@@ -175,8 +179,9 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
       setTimeout(() => resetCartStatus(), 3000)
       dispatch({ type: 'resetForm' })
       dispatch({ type: 'setSlots', payload: [] })
-    } catch {
+    } catch (error) {
       setStatus(createStatus({ error: 'Unable to complete reservation. Please try again.' }))
+      console.error('Error booking reservation:', error)
     }
   }
 

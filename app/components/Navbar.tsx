@@ -1,7 +1,9 @@
 'use client'
 
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
 import Link from "next/link"
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 interface NavItem {
   label: string;
@@ -17,29 +19,43 @@ const navItems: NavItem[] = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const menuLinksRef = useRef<HTMLDivElement>(null)
 
   const toggleMenu = (): void => setIsOpen(!isOpen);
   const closeMenu = (): void => setIsOpen(false);
 
+  useGSAP(() => {
+    if(isOpen && menuLinksRef.current) {
+      gsap.fromTo(
+          menuLinksRef.current.children,
+          { opacity: 0, y: 20 },
+          { opacity: 1, y: 0, stagger: 0.1, duration: 0.5, ease: "power3.out", delay: 0.3 }
+        )
+    }
+  }, [isOpen])
+  
+
   return (
-    <header className="w-full bg-[#0E0D0B] z-40 flex items-center justify-between px-6 py-6 md:px-12 md:py-6 border-b border-[#2A1F1C]/40">
-      <Link href="/" className="flex flex-col items-start group" data-cursor-hover>
-        <span className="text-lg md:text-xl tracking-[0.3em] text-[#E8E0D8] group-hover:text-[#7C1515] transition-colors duration-300">
+    <header className="sticky top-0 w-full bg-[#0E0D0B] z-40 flex items-center justify-between px-6 py-6 md:px-6 lg:px-12 md:py-6 border-b border-[#2A1F1C]/40">
+      <Link href="/" className="flex flex-col group" data-cursor-hover>
+        <span className="text-lg md:text-sm lg:text-xl tracking-[0.3em] text-[#8D7E73] group-hover:text-[#7C1515] transition-colors duration-300">
           OBSIDIAN
         </span>
-        <span className="text-[9px] tracking-[0.45em] text-[#6B6360] uppercase mt-0.5">
+        <span className="text-[8px] text-center tracking-[0.45em] text-[#6B6360] uppercase mt-0.5">
           Coffee Lounge
         </span>
       </Link>
-      <nav className="hidden md:flex items-center space-x-12">
+      <nav className="hidden md:flex items-center space-x-12 md:space-x-8 lg:space-x-12">
         {navItems.map((link) => (
           <Link
             key={link.label}
             href={link.href}
-            className="text-xs tracking-[0.25em] text-[#6B6360] hover:text-[#E8E0D8] transition-colors duration-300"
+            className="text-xs tracking-[0.25em] text-[#6B6360] hover:text-[#E8E0D8] transition-colors duration-300 group relative"
             data-cursor-hover
           >
             {link.label}
+            <span className="absolute bottom-0 left-0 w-full h-px bg-[#A32D1C] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
+
           </Link>
         ))}
       </nav>
@@ -63,7 +79,7 @@ const Navbar = () => {
         <Link
           href="/reservation"
           data-cursor-hover
-          className="text-[10px] tracking-[0.25em] text-[#E8E0D8] border border-[#7C1515] px-5 py-2.5 rounded-sm hover:bg-[#7C1515] transition-all duration-300 ease-out"
+          className="text-[10px] md:hidden lg:block tracking-[0.25em] text-[#E8E0D8] border border-[#7C1515] px-5 py-2.5 rounded-sm hover:bg-[#7C1515] transition-all duration-300 ease-out"
         >
           RESERVE A TABLE
         </Link>
@@ -89,7 +105,7 @@ const Navbar = () => {
       >
         <div className="flex items-center justify-between pb-6 border-b border-[#2A1F1C]">
           <div className="flex flex-col">
-            <span className="text-sm tracking-[0.3em] text-[#E8E0D8]">
+            <span className="text-sm tracking-[0.3em] text-[#8D7E73]">
               OBSIDIAN
             </span>
             <span className="text-[8px] tracking-[0.3em] text-[#6B6360] uppercase mt-0.5">
@@ -105,16 +121,16 @@ const Navbar = () => {
             </svg>
           </button>
         </div>
-        <nav className="flex flex-col space-y-8 py-10">
+        <nav ref={menuLinksRef} className="flex flex-col space-y-8 py-10">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.label}
               href={item.href}
               onClick={closeMenu}
               className="text-sm tracking-[0.3em] text-[#6B6360] hover:text-[#E8E0D8] transition-colors duration-300"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
         <div className="space-y-4 pt-6 border-t border-[#2A1F1C]">
@@ -127,13 +143,6 @@ const Navbar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
             <span>ONLY WORKERS</span>
-          </Link>
-          <Link
-            href="#reserve"
-            onClick={closeMenu}
-            className="w-full py-4 bg-[#7C1515] text-[#E8E0D8] flex items-center justify-center text-xs tracking-[0.2em] hover:bg-[#8B1A1A] transition-colors rounded-sm shadow-lg shadow-black/40"
-          >
-            RESERVE A TABLE
           </Link>
         </div>
       </div>

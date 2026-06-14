@@ -67,8 +67,8 @@ create table public.restaurant_settings (
   close_time time without time zone not null,
   slot_interval integer not null,
   total_capacity integer not null,
-  session_duration smallint null,
-  cleaning_buffer integer null,
+  session_duration_min smallint null,
+  cleaning_buffer_min integer null,
   max_party_size smallint not null default '10'::smallint,
   isopen boolean not null default true,
   tax_rate numeric(5, 2) not null default 0,
@@ -76,6 +76,8 @@ create table public.restaurant_settings (
   min_party_size smallint not null default '2'::smallint,
   max_booking_days smallint not null default '30'::smallint,
   id uuid not null default gen_random_uuid (),
+  lead_time_min smallint not null default 15,
+  timezone text not null default 'America/New_York'::text,
   constraint restaurant_settings_pkey primary key (id)
 ) TABLESPACE pg_default;
 
@@ -108,6 +110,7 @@ create table public.restaurant_settings (
  ┃ ┃ ┗ 📜route.ts
  ┣ 📂components
  ┃ ┣ 📜CartButton.tsx
+ ┃ ┣ 📜CustomCursor.tsx
  ┃ ┣ 📜IsOpen.tsx
  ┃ ┗ 📜Navbar.tsx
  ┣ 📂dashboard

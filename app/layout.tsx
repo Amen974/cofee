@@ -29,7 +29,7 @@ export default function RootLayout({
       lang="en"
       className={`${nunito.variable} ${dancing.variable} h-full antialiased`}
     >
-      <body className="min-h-full">
+      <body>
         <CustomCursor />
         {children}
       </body>
