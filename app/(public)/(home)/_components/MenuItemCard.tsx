@@ -66,7 +66,7 @@ export default function MenuItemCard({ item }: { item: Item }) {
             addItem({ ...item, quantity })
             setCartStatus("itemAdded", "Item added")
             setTimeout(() => resetCartStatus(), 500)
-          } catch (err) {
+          } catch {
             setCartStatus("error", "Failed to add item")
             setTimeout(() => resetCartStatus(), 3000)
           }

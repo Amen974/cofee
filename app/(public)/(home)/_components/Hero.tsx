@@ -19,6 +19,7 @@ const heroStats: readonly HeroStat[] = [
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null)
+  const dotRef = useRef<HTMLSpanElement>(null)
 
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } })
@@ -40,12 +41,32 @@ const Hero = () => {
         { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.15 },
         "-=0.9"
       )
+      .fromTo(
+        ".hero-tagline",
+        { autoAlpha: 0, y: 10 },
+        { autoAlpha: 1, y: 0, duration: 0.7 },
+        "-=0.4"
+      )
+      .fromTo(
+        ".hero-stat",
+        { autoAlpha: 0, y: 20 },
+        { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.1 },
+        "-=0.3"
+      )
+
+    gsap.to(dotRef.current, {
+      autoAlpha: 0,
+      duration: 1,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    })
   }, { scope: containerRef })
 
   return (
     <section
       ref={containerRef}
-      className="min-h-screen relative text-[#8D7E73] px-4 md:px-10 lg:px-20 pt-5 md:pt-20"
+      className="min-h-[90vh] relative text-[#8D7E73] px-4 md:px-10 lg:px-25 pt-5 md:pt-20"
     >
       <div className="text-[0.625rem] md:text-xs tracking-[0.25em] uppercase">
         <div className="overflow-hidden">
@@ -84,8 +105,8 @@ const Hero = () => {
         </Link>
       </div>
 
-      <p className="text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#8D7E73] mb-10 flex gap-2">
-        <span className="rounded-full border border-[#9a2d1e]/70 flex items-center justify-center w-4 h-4">
+      <p className="hero-tagline text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#8D7E73] mb-10 flex gap-2 justify-center md:justify-start">
+        <span ref={dotRef} className="rounded-full border border-[#9a2d1e]/70 flex items-center justify-center w-4 h-4">
           <span className="w-1.5 h-1.5 rounded-full bg-[#9a2d1e]" />
         </span>
         The evening awaits.
@@ -95,10 +116,10 @@ const Hero = () => {
         {heroStats.map((stat) => {
           const Icon = stat.icon
           return (
-            <div key={stat.label} className='flex-1 flex items-center'>
-              <Icon className="w-5 h-5 text-[#A32D1C] mr-2.5" />
+            <div key={stat.label} className='hero-stat flex-1 flex items-center'>
+              <Icon className="w-5 h-5 text-yellow-800 mr-2.5" />
               <div className="flex flex-col">
-                <span className="text-[0.625rem] tracking-[0.25em] text-[#A32D1C] uppercase font-semibold">
+                <span className="text-[0.625rem] tracking-[0.25em] text-white uppercase font-semibold">
                   {stat.value}
                 </span>
                 <span className="text-[0.625rem] tracking-[0.2em] text-[#8D7E73] uppercase mt-1">
@@ -110,6 +131,24 @@ const Hero = () => {
         })}
       </div>
 
+      <div className="absolute hidden p-7 right-0 top-35 md:block">
+        <span
+        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+        className="text-xs tracking-[0.3em] text-[#A32D1C] uppercase font-bold"
+      >
+        99.4 / 100 <span className="text-[#8D7E73]">SPECIALTY SCORE</span>
+      </span>
+      </div>
+
+      <div className="absolute hidden p-7 left-0 top-30 lg:block">
+        <span
+        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+        className="text-xs tracking-[0.3em] text-[#8D7E73] uppercase font-bold"
+      >
+        RESERVATIONS STRONGLY <span className="text-[#A32D1C]">ADVISED</span>
+      </span>
+      </div>
+      
     </section>
   )
 }
