@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
 import BestSellers from "./_components/BestSellers";
 import Hero from "./_components/Hero";
+import { Item } from "@/types";
 
 
 export default async function Home() {
@@ -11,11 +12,13 @@ export default async function Home() {
   .from('menu_items')
   .select('*')
   .in('name', ['Americano', 'Cortado', 'Creamy latte'])
-  if (error) return  console.error(error)
+  if (error) throw new Error(error.message)
+
+    const items: Item[] = bestSellers
   return (
     <main>
       <Hero />
-      <BestSellers items={bestSellers ?? []} />
+      <BestSellers items={items ?? []} />
     </main>
   );
 }
