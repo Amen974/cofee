@@ -22,6 +22,8 @@ const Hero = () => {
   const dotRef = useRef<HTMLSpanElement>(null)
 
   useGSAP(() => {
+    const mm = gsap.matchMedia()
+
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } })
 
     tl.fromTo(
@@ -53,14 +55,17 @@ const Hero = () => {
         { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.1 },
         "-=0.3"
       )
-
-    gsap.to(dotRef.current, {
-      autoAlpha: 0,
-      duration: 1,
-      repeat: -1,
-      yoyo: true,
-      ease: "sine.inOut",
-    })
+      .call(() => {
+        mm.add("(min-width: 768px)", () => {
+          gsap.to(dotRef.current, {
+            autoAlpha: 0,
+            duration: 1,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut",
+          })
+        })
+      })
   }, { scope: containerRef })
 
   return (
@@ -133,22 +138,22 @@ const Hero = () => {
 
       <div className="absolute hidden p-7 right-0 top-35 md:block">
         <span
-        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        className="text-xs tracking-[0.3em] text-[#A32D1C] uppercase font-bold"
-      >
-        99.4 / 100 <span className="text-[#8D7E73]">SPECIALTY SCORE</span>
-      </span>
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+          className="text-xs tracking-[0.3em] text-[#A32D1C] uppercase font-bold"
+        >
+          99.4 / 100 <span className="text-[#8D7E73]">SPECIALTY SCORE</span>
+        </span>
       </div>
 
       <div className="absolute hidden p-7 left-0 top-30 lg:block">
         <span
-        style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
-        className="text-xs tracking-[0.3em] text-[#8D7E73] uppercase font-bold"
-      >
-        RESERVATIONS STRONGLY <span className="text-[#A32D1C]">ADVISED</span>
-      </span>
+          style={{ writingMode: 'vertical-rl', textOrientation: 'mixed' }}
+          className="text-xs tracking-[0.3em] text-[#8D7E73] uppercase font-bold"
+        >
+          RESERVATIONS STRONGLY <span className="text-[#A32D1C]">ADVISED</span>
+        </span>
       </div>
-      
+
     </section>
   )
 }
