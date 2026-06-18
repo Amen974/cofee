@@ -1,10 +1,10 @@
 'use client'
 
 import { useRef } from "react"
-import Link from "next/link"
 import { ArrowRight, Coffee, Gem, Star, Leaf } from "lucide-react"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
+import NavLink from "@/app/components/NavLink"
 
 gsap.registerPlugin(useGSAP)
 
@@ -94,20 +94,20 @@ const Hero = () => {
       </div>
 
       <div className="uppercase flex flex-wrap justify-center md:justify-start gap-4 mt-10 mb-10">
-        <Link
+        <NavLink
           href="/reservation"
           data-cursor-hover
           className="hero-cta w-[80vw] md:w-60 h-10 bg-[#9a2d1e] text-white rounded-xs uppercase font-light tracking-[0.25em] text-[0.625rem] md:text-xs hover:bg-[#8d2414] transition-colors duration-300 flex justify-center items-center"
         >
           secure a table <ArrowRight size={12} className="ml-6" />
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           href="/menu"
           data-cursor-hover
           className="hero-cta w-[80vw] md:w-60 h-10 bg-transparent border border-[#A32D1C] text-white rounded-xs uppercase font-light tracking-[0.25em] text-[0.625rem] md:text-xs hover:bg-[#1b1816] transition-colors duration-300 flex justify-center items-center"
         >
           Explore Our Menu <ArrowRight size={12} className="ml-4" />
-        </Link>
+        </NavLink>
       </div>
 
       <p className="hero-tagline text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#8D7E73] mb-10 flex gap-2 justify-center md:justify-start">

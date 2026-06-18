@@ -14,3 +14,14 @@
 .dancing{
   font-family: var(--font-dancing), cursive;
 }
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  50%, 100% { content: '...'; }
+}
+
+.loading-dots::after {
+  content: '';
+  animation: dots 1.5s infinite;
+}

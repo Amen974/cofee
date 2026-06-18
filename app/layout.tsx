@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Nunito, Dancing_Script } from 'next/font/google'
 import "./globals.css";
 import CustomCursor from "./components/CustomCursor";
+import Navbar from "./components/Navbar";
+import NavigationObserver from "./components/NavigationObserver";
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -31,6 +33,8 @@ export default function RootLayout({
     >
       <body>
         <CustomCursor />
+        <Navbar />
+        <NavigationObserver />
         {children}
       </body>
     </html>

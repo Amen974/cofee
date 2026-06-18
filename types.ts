@@ -106,7 +106,7 @@ export type UseBookingResult = {
   readonly book: () => Promise<void>;
 };
 
-export type Status = "idle" | "loading" | "error" | "success" | "itemAdded";
+export type Status = "idle" | "loading" | "itemAdded";
 
 export type ItemForm = Omit<Item, "id" | "created_at">;
 

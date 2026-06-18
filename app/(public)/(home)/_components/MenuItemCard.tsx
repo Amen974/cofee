@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Image from "next/image"
 import { Item } from "@/types"
 import { usecart } from "@/lib/store/useCart"
@@ -9,6 +9,23 @@ export default function MenuItemCard({ item }: { item: Item }) {
   const [quantity, setQuantity] = useState(1)
   const { addItem } = usecart()
   const { setCartStatus, resetCartStatus } = useCartIndicator()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+
+
+  function handleAddToCart() {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+
+    addItem({ ...item, quantity })
+    setCartStatus("itemAdded", "Adding")
+
+    timeoutRef.current = setTimeout(() => {
+      resetCartStatus()
+      timeoutRef.current = null
+    }, 500)
+  }
 
   return (
     <div className={`border-2 border-red-700 rounded-2xl p-4 flex flex-col h-110 relative ${!item.is_available ? 'opacity-60' : 'hover:shadow-lg hover:shadow-red-700/20'}`}>
@@ -61,16 +78,7 @@ export default function MenuItemCard({ item }: { item: Item }) {
 
       <button
         disabled={!item.is_available}
-        onClick={() => {
-          try {
-            addItem({ ...item, quantity })
-            setCartStatus("itemAdded", "Item added")
-            setTimeout(() => resetCartStatus(), 500)
-          } catch {
-            setCartStatus("error", "Failed to add item")
-            setTimeout(() => resetCartStatus(), 3000)
-          }
-        }}
+        onClick={handleAddToCart}
         className="bg-red-700 text-white py-2 rounded-xl font-semibold
             hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed mt-6 cursor-pointer active:scale-95"
       >

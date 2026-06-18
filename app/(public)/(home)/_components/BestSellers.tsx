@@ -20,6 +20,7 @@ const BestSellers = ({ items }: BestSellersProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const { addItem } = usecart()
   const { setCartStatus, resetCartStatus } = useCartIndicator()
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useGSAP(() => {
     gsap.timeline({ scrollTrigger: { trigger: '.bs-header', start: 'top 75%' } })
@@ -63,7 +64,7 @@ const BestSellers = ({ items }: BestSellersProps) => {
             <Image src={item.image_url ?? ""} alt={item.name} height={190} width={190}
               className="bs-img rounded-full w-35 h-35 md:h-45 md:w-45" />
             <div>
-              <h2 className="bs-text text-[#A32D1C] text-[clamp(2.5rem,4vw,4rem)] font-bold md:-mb-2">
+              <h2 className="bs-text text-[#A32D1C] text-[2.5rem] md:text-[4rem] font-bold md:-mb-2">
                 {item.name}
               </h2>
               <p className="bs-text hidden md:block w-90 mb-4">{item.description}</p>
@@ -71,9 +72,17 @@ const BestSellers = ({ items }: BestSellersProps) => {
                 data-cursor-hover
                 disabled={!item.is_available}
                 onClick={() => {
-                  addItem({ ...item, quantity: 1 })
-                  setCartStatus("itemAdded", "Item added")
-                  setTimeout(() => resetCartStatus(), 500)
+                  if (timeoutRef.current) {
+                    clearTimeout(timeoutRef.current)
+                  }
+
+                  addItem({ ...item })
+                  setCartStatus("itemAdded", "Adding")
+
+                  timeoutRef.current = setTimeout(() => {
+                    resetCartStatus()
+                    timeoutRef.current = null
+                  }, 500)
                 }}
                 className="bs-text flex items-center gap-2 w-fit text-[0.625rem] tracking-[0.25em] uppercase text-white bg-[#9a2d1e] px-5 py-2.5 rounded-xs hover:bg-[#8d2414] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >

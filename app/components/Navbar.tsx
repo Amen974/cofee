@@ -2,8 +2,8 @@
 
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
-import Link from "next/link"
 import { useRef, useState } from "react";
+import NavLink from "./NavLink";
 
 interface NavItem {
   label: string;
@@ -37,33 +37,33 @@ const Navbar = () => {
 
   return (
     <header className="sticky top-0 w-full bg-[#0E0D0B] z-40 flex items-center justify-between px-6 py-6 md:px-6 lg:px-12 md:py-6 border-b border-[#2A1F1C]/40">
-      <Link href="/" className="flex flex-col group" data-cursor-hover>
+      <NavLink href="/" className="flex flex-col group" data-cursor-hover>
         <span className="text-lg md:text-sm lg:text-xl tracking-[0.3em] text-[#8D7E73] group-hover:text-[#7C1515] transition-colors duration-300">
           OBSIDIAN
         </span>
         <span className="text-[8px] text-center tracking-[0.45em] text-[#6B6360] uppercase mt-0.5">
           Coffee Lounge
         </span>
-      </Link>
+      </NavLink>
       <nav className="hidden md:flex items-center space-x-12 md:space-x-8 lg:space-x-12">
         {navItems.map((link) => (
-          <Link
+          <NavLink
             key={link.label}
             href={link.href}
-            className="text-xs tracking-[0.25em] text-[#6B6360] hover:text-[#E8E0D8] transition-colors duration-300 group relative"
+            className="text-xs tracking-[0.25em] text-[#8D7E73] hover:text-[#E8E0D8] transition-colors duration-300 group relative"
             data-cursor-hover
           >
             {link.label}
             <span className="absolute bottom-0 left-0 w-full h-px bg-[#A32D1C] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left" />
 
-          </Link>
+          </NavLink>
         ))}
       </nav>
       <div className="hidden md:flex items-center space-x-6">
-        <Link
+        <NavLink
           href="/login"
           data-cursor-hover
-          className="text-[11px] tracking-[0.2em] text-[#6B6360] hover:text-[#E8E0D8] flex items-center space-x-2 transition-colors duration-300"
+          className="text-[11px] tracking-[0.2em] text-[#8D7E73] hover:text-[#E8E0D8] flex items-center space-x-2 transition-colors duration-300"
         >
           <svg
             className="w-4 h-4 text-[#7C1515]"
@@ -75,14 +75,14 @@ const Navbar = () => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
           </svg>
           <span>ONLY WORKERS</span>
-        </Link>
-        <Link
+        </NavLink>
+        <NavLink
           href="/reservation"
           data-cursor-hover
           className="text-[10px] md:hidden lg:block tracking-[0.25em] text-[#E8E0D8] border border-[#7C1515] px-5 py-2.5 rounded-sm hover:bg-[#7C1515] transition-all duration-300 ease-out"
         >
           RESERVE A TABLE
-        </Link>
+        </NavLink>
       </div>
       <button
         onClick={toggleMenu}
@@ -123,18 +123,18 @@ const Navbar = () => {
         </div>
         <nav ref={menuLinksRef} className="flex flex-col space-y-8 py-10">
           {navItems.map((item) => (
-            <Link
+            <NavLink
               key={item.label}
               href={item.href}
               onClick={closeMenu}
               className="text-sm tracking-[0.3em] text-[#6B6360] hover:text-[#E8E0D8] transition-colors duration-300"
             >
               {item.label}
-            </Link>
+            </NavLink>
           ))}
         </nav>
         <div className="space-y-4 pt-6 border-t border-[#2A1F1C]">
-          <Link
+          <NavLink
             href="/login"
             onClick={closeMenu}
             className="w-full py-4 bg-[#2A1F1C]/40 border border-[#2A1F1C] hover:border-[#7C1515] flex items-center justify-center space-x-3 text-xs tracking-[0.2em] text-[#E8E0D8] transition-colors rounded-sm"
@@ -143,7 +143,7 @@ const Navbar = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
             </svg>
             <span>ONLY WORKERS</span>
-          </Link>
+          </NavLink>
         </div>
       </div>
 
