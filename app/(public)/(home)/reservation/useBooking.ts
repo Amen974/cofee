@@ -169,13 +169,11 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
 
       if (!response.ok) {
         setStatus(createStatus({ error: data.error ?? 'Reservation failed.' }))
-        setCartStatus('error', data.error ?? 'Reservation failed.')
         console.error('Error placing reservation:', data.error)
         return
       }
 
       setStatus(createStatus({ success: `Reservation confirmed for ${state.selected}` }))
-      setCartStatus('success', `Reservation confirmed for ${state.selected}`)
       setTimeout(() => resetCartStatus(), 3000)
       dispatch({ type: 'resetForm' })
       dispatch({ type: 'setSlots', payload: [] })

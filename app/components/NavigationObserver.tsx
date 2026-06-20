@@ -29,7 +29,7 @@ export default function NavigationObserver() {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current)
     }
-  }, [pathname])
+  }, [pathname, setNavigating])
 
   return null
 }

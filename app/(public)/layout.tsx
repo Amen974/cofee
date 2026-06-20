@@ -10,7 +10,7 @@ export default function PublicLayout({
     <>
       <IsOpen />
       <CartButton />
-      <main className="bg-[#0E0D0B] relative">
+      <main className="relative">
         {children}
       </main>
     </>
