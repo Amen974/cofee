@@ -65,7 +65,7 @@ const createStatus = (overrides: Partial<BookingStatus>): BookingStatus => ({
 export const useBooking = (settings: ReservationSettings): UseBookingResult => {
   const [status, setStatus] = useState<BookingStatus>(initialStatus)
   const [state, dispatch] = useReducer(bookingReducer, settings.min_party_size, initialState)
-  const { setCartStatus, resetCartStatus } = useCartIndicator()
+  const { setCartState, reset } = useCartIndicator()
   const minPartySize = settings.min_party_size
   const maxPartySize = settings.max_party_size
   const maxBookingDays = settings.max_booking_days
@@ -150,7 +150,7 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
     }
 
     setStatus(createStatus({ loading: true }))
-    setCartStatus('loading', 'Placing reservation...')
+    setCartState('Confirming')
 
     try {
       const response = await fetch('/api/reservations', {
@@ -169,16 +169,18 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
 
       if (!response.ok) {
         setStatus(createStatus({ error: data.error ?? 'Reservation failed.' }))
+        reset()
         console.error('Error placing reservation:', data.error)
         return
       }
 
       setStatus(createStatus({ success: `Reservation confirmed for ${state.selected}` }))
-      setTimeout(() => resetCartStatus(), 3000)
+      reset()
       dispatch({ type: 'resetForm' })
       dispatch({ type: 'setSlots', payload: [] })
     } catch (error) {
       setStatus(createStatus({ error: 'Unable to complete reservation. Please try again.' }))
+      reset()
       console.error('Error booking reservation:', error)
     }
   }

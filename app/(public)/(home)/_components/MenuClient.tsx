@@ -64,7 +64,7 @@ export default function MenuClient({ items }: { items: Item[] }) {
         </div>
 
         <div className="menu-search mt-5 flex justify-center">
-          <div className="relative w-full max-w-md">
+          <div className="relative w-[80vw] md:w-[40vw]">
             <Search
               size={14}
               className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8D7E73]"
@@ -74,7 +74,7 @@ export default function MenuClient({ items }: { items: Item[] }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search the menu"
-              className="w-full h-11 rounded-xs border border-[#8D7E73]/30 bg-[#211c19] pl-10 pr-4 text-xs tracking-[0.1em] text-white placeholder:text-[#8D7E73]/60 outline-none transition-colors duration-300 focus:border-[#A32D1C]/60"
+              className="w-full h-11 rounded-xs border border-[#8D7E73]/30 bg-[#211c19] pl-10 pr-4 text-xs tracking-widest text-white placeholder:text-[#8D7E73]/60 outline-none transition-colors duration-300 focus:border-[#A32D1C]/60"
             />
           </div>
         </div>

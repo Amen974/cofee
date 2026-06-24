@@ -19,7 +19,7 @@ const BookingClient = ({ settings }: { settings: ReservationSettings }) => {
   } = useBooking(settings)
 
   return (
-    <main className="bg-black min-h-screen flex flex-col items-center py-12 px-4 text-white font-serif">
+    <main className="min-h-screen flex flex-col items-center py-12 px-4 text-white font-serif">
       <div className="w-full max-w-2xl flex flex-col gap-8">
         <p className="text-[11px] tracking-[0.18em] uppercase text-neutral-600">
           Reserve a table

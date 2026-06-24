@@ -2,10 +2,14 @@
 
 import { usecart } from '@/lib/store/useCart'
 import CartItem from '../_components/CartItem'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { ArrowRight, PackageOpen } from 'lucide-react'
-import Link from "next/link"
+import NavLink from '@/app/components/NavLink'
+import gsap from "gsap"
+import { useGSAP } from "@gsap/react"
+
+gsap.registerPlugin(useGSAP)
 
 type Settings = {
   tax_rate: number
@@ -16,6 +20,7 @@ const Page = () => {
   const { items, totalPrice } = usecart()
   const [mounted, setMounted] = useState(false)
   const [settings, setSettings] = useState<Settings>({ tax_rate: 0, delivery_fee: 0 })
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const setTrue = () => {
@@ -32,6 +37,14 @@ const Page = () => {
     fetchSettings()
   }, [])
 
+  useGSAP(() => {
+    if (!mounted) return
+
+    gsap.fromTo('.cart-fade-in',
+      { autoAlpha: 0, y: 20 },
+      { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power3.out' })
+  }, { scope: containerRef, dependencies: [mounted], revertOnUpdate: true })
+
   if (!mounted) return null
 
   const subtotal = totalPrice()
@@ -41,29 +54,34 @@ const Page = () => {
   const isEmpty = items.length === 0
 
   return (
-    <div className="bg-black min-h-screen text-white py-10 px-6 flex justify-center items-center">
+    <div ref={containerRef} className="py-10 px-4 md:px-10 lg:px-16 text-[#8D7E73]">
       {isEmpty ? (
-        <div className="flex flex-col items-center justify-center py-32 gap-4 text-white/40 w-screen">
-          <PackageOpen size={64} strokeWidth={1} />
-          <p className="text-xl font-medium">Your cart is empty</p>
-          <a
+        <div className="cart-fade-in h-[70vh] flex flex-col items-center justify-center py-32 gap-4">
+          <PackageOpen size={56} strokeWidth={1} className="text-[#8D7E73]/40" />
+          <p className="text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#8D7E73]/60">
+            Your cart is empty
+          </p>
+          <NavLink
             href="/menu"
-            className="mt-2 text-red-600 hover:text-red-500 text-sm underline underline-offset-4"
+            className="mt-2 text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#A32D1C] hover:text-[#9a2d1e] underline underline-offset-4 transition-colors duration-300"
           >
             Browse the menu
-          </a>
+          </NavLink>
         </div>
       ) : (
-        <div className='w-full h-full flex flex-col md:flex-row'>
-          <div className='flex-1 flex flex-col justify-center'>
-            <CartItem items={items} />
-          </div>
+        <div className="cart-fade-in max-w-6xl mx-auto">
+          <div className="w-full flex flex-col lg:flex-row gap-10 lg:gap-16 min-h-[75vh]">
+            <div className="flex-1 flex items-center">
+              <CartItem items={items} />
+            </div>
 
-          <div className='flex-1 flex justify-center items-center'>
-            <div className="sticky top-6 border border-white/10 rounded-2xl p-6 bg-white/5 backdrop-blur-sm flex flex-col gap-5 w-[50vh] md:w-85 lg:w-95">
-                <h2 className="text-xl font-bold text-red-600 tracking-tight">Order Summary</h2>
+            <div className="lg:w-88">
+              <div className="lg:sticky lg:top-1/2 lg:transform lg:-translate-y-1/2 border border-[#8D7E73]/20 bg-[#211c19] p-6 md:p-7 flex flex-col gap-5">
+                <h2 className="text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#A32D1C] font-semibold">
+                  Order Summary
+                </h2>
 
-                <div className="flex flex-col gap-3 text-sm text-white/70">
+                <div className="flex flex-col gap-3 text-xs tracking-wide">
                   <div className="flex justify-between">
                     <span>Subtotal ({items.length} {items.length === 1 ? 'item' : 'items'})</span>
                     <span className="text-white">${subtotal.toFixed(2)}</span>
@@ -82,24 +100,24 @@ const Page = () => {
                   </div>
                 </div>
 
-                <div className="border-t border-white/10 pt-4 flex justify-between font-bold text-lg">
-                  <span>Total</span>
-                  <span className="text-red-500">${total.toFixed(2)}</span>
+                <div className="border-t border-[#8D7E73]/20 pt-4 flex justify-between items-baseline">
+                  <span className="text-[0.625rem] tracking-[0.25em] uppercase">Total</span>
+                  <span className="text-[#A32D1C] text-2xl font-bold">${total.toFixed(2)}</span>
                 </div>
 
-                <Link
-                  href= '/cart/checkout' 
-                  className="w-full bg-red-700 hover:bg-red-600 active:scale-95 transition-all text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer"
+                <NavLink
+                  href='/cart/checkout'
+                  data-cursor-hover
+                  className="w-full h-11 bg-[#9a2d1e] hover:bg-[#8d2414] active:scale-95 transition-all duration-300 text-white text-[0.625rem] tracking-[0.25em] uppercase rounded-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   Continue with order
-                  <ArrowRight size={18} />
-                </Link>
+                  <ArrowRight size={14} />
+                </NavLink>
               </div>
+            </div>
           </div>
-          
-        </div>
+        </div>  
       )}
-
     </div>
   )
 }

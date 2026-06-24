@@ -19,7 +19,7 @@ interface BestSellersProps { items: Item[] }
 const BestSellers = ({ items }: BestSellersProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const { addItem } = usecart()
-  const { setCartStatus, resetCartStatus } = useCartIndicator()
+  const { setCartState, reset } = useCartIndicator()
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useGSAP(() => {
@@ -77,10 +77,10 @@ const BestSellers = ({ items }: BestSellersProps) => {
                   }
 
                   addItem({ ...item })
-                  setCartStatus("itemAdded", "Adding")
+                  setCartState('Adding')
 
                   timeoutRef.current = setTimeout(() => {
-                    resetCartStatus()
+                    reset()
                     timeoutRef.current = null
                   }, 500)
                 }}

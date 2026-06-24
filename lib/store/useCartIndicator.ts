@@ -1,16 +1,14 @@
+import { CartState } from '@/types'
 import { create } from 'zustand'
-import { Status } from '@/types'
 
 interface CartIndicatorStore {
-  cartStatus: Status
-  cartMessage: string
-  setCartStatus: (cartStatus: Status, cartMessage?: string) => void
-  resetCartStatus: () => void
+  cartState: CartState
+  setCartState: (state: CartState) => void
+  reset: () => void
 }
 
 export const useCartIndicator = create<CartIndicatorStore>((set) => ({
-  cartStatus: 'idle',
-  cartMessage: '',
-  setCartStatus: (cartStatus, cartMessage = '') => set({ cartStatus, cartMessage }),
-  resetCartStatus: () => set({ cartStatus: 'idle', cartMessage: '' }),
+  cartState: 'idle',
+  setCartState: (cartState) => set({ cartState }),
+  reset: () => set({ cartState:'idle' }),
 }))

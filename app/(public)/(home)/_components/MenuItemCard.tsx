@@ -9,7 +9,7 @@ import { useCartIndicator } from "@/lib/store/useCartIndicator"
 export default function MenuItemCard({ item }: { item: Item }) {
   const [quantity, setQuantity] = useState(1)
   const { addItem } = usecart()
-  const { setCartStatus, resetCartStatus } = useCartIndicator()
+  const { setCartState, reset } = useCartIndicator()
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   function handleAddToCart() {
@@ -18,10 +18,10 @@ export default function MenuItemCard({ item }: { item: Item }) {
     }
 
     addItem({ ...item, quantity })
-    setCartStatus("itemAdded", "Adding")
+    setCartState('Adding')
 
     timeoutRef.current = setTimeout(() => {
-      resetCartStatus()
+      reset()
       timeoutRef.current = null
     }, 500)
   }
@@ -30,7 +30,7 @@ export default function MenuItemCard({ item }: { item: Item }) {
     <div className="group relative w-72 m-3 rounded-2xl border border-[#8D7E73]/20 bg-[#211c19] p-4 text-[#8D7E73] transition-colors duration-300">
       <div className="relative overflow-hidden rounded-xl">
         <Image
-          src={item.image_url}
+          src={item.image_url || '/placeholder-coffee.png'}
           alt={item.name}
           width={250}
           height={200}

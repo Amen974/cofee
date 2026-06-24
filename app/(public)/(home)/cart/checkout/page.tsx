@@ -1,12 +1,15 @@
 'use client'
 
 import { useCheckout } from './useCheckout'
-import { useRouter } from 'next/navigation'
-import { JSX, useEffect } from 'react'
+import { JSX, useRef } from 'react'
 import { ArrowRight, MapPin } from 'lucide-react'
+import gsap from 'gsap'
+import { useGSAP } from '@gsap/react'
+
+gsap.registerPlugin(useGSAP)
 
 const Page = (): JSX.Element => {
-  const router = useRouter()
+  const containerRef = useRef<HTMLFormElement>(null)
   const {
     formState,
     deliveryState,
@@ -15,87 +18,94 @@ const Page = (): JSX.Element => {
     deliveryDispatch,
     getLocation,
     handleSubmit,
-    isDeliveryInfoProvided,
   } = useCheckout()
 
-  useEffect(() => {
-    if (submitState.success) {
-      router.push('/')
-    }
-  }, [submitState.success, router])
+  useGSAP(() => {
+    gsap.fromTo(
+      '.checkout-fade-in',
+      { autoAlpha: 0, y: 24 },
+      { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power3.out' }
+    )
+  }, { scope: containerRef })
 
   return (
-    <form onSubmit={handleSubmit} className='bg-black min-h-screen flex justify-center items-center text-white'>
-      <div className='border border-gray-800 flex flex-col gap-4 rounded-xl shadow-2xl w-[90vw] max-w-130 p-7 bg-[#0a0a0a]'>
-        <h1 className='text-red-700 text-3xl'>Your Details</h1>
-        
+    <form ref={containerRef} onSubmit={handleSubmit} className='flex justify-center items-center text-[#8D7E73] py-1 px-4'>
+      <div className='checkout-fade-in border border-[#8D7E73]/25 flex flex-col gap-5 rounded-xs w-[90vw] max-w-130 p-7 bg-[#161311] shadow-2xl shadow-black/40'>
+        <h1 className='text-[#A32D1C] text-3xl'>Your Details</h1>
+
         {submitState.error && (
-          <div className='bg-red-500/10 border border-red-500/20 text-red-400 text-sm px-3 py-2 rounded-lg'>
+          <div className='bg-[#A32D1C]/10 border border-[#A32D1C]/30 text-[#A32D1C] text-xs tracking-wide px-3 py-2 rounded-xs'>
             {submitState.error}
           </div>
         )}
 
         <div>
-          <label className='uppercase text-xs text-gray-300'>Full name</label>
+          <label className='uppercase text-[0.625rem] tracking-[0.25em] text-[#8D7E73]'>Full name</label>
           <input
-            required
             type='text'
             placeholder='Jane Doe'
             value={formState.name}
             onChange={(e) => formDispatch({ type: 'SET_NAME', payload: e.target.value })}
-            className="flex h-10 w-full rounded-xl border border-gray-800 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:border-red-700 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+            className="flex h-10 w-full rounded-xs border border-[#8D7E73]/30 bg-transparent px-3 py-1 text-sm text-white transition-colors duration-300 placeholder:text-[#8D7E73]/40 focus-visible:outline-none focus-visible:border-[#A32D1C]/60 disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
 
         <div>
-          <label className='uppercase text-xs text-gray-300'>Phone</label>
+          <label className='uppercase text-[0.625rem] tracking-[0.25em] text-[#8D7E73]'>Phone</label>
           <input
-            required
             type='tel'
             placeholder='+1 555 000 000'
             value={formState.phone}
             onChange={(e) => formDispatch({ type: 'SET_PHONE', payload: e.target.value })}
-            className="flex h-10 w-full rounded-xl border border-gray-800 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:border-red-700 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+            className="flex h-10 w-full rounded-xs border border-[#8D7E73]/30 bg-transparent px-3 py-1 text-sm text-white transition-colors duration-300 placeholder:text-[#8D7E73]/40 focus-visible:outline-none focus-visible:border-[#A32D1C]/60 disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
 
-        <h1 className='text-red-700 text-3xl'>Delivery</h1>
+        <h1 className='text-[#A32D1C] text-3xl'>Delivery</h1>
 
         <div>
-          <button type='button' onClick={getLocation} className='text-red-400 bg-[#200101] border border-red-700 px-3 py-2 rounded-xl cursor-pointer hover:bg-[#360202] active:scale-95 flex justify-center gap-2 w-full'>
-            <MapPin size={18} className='mt-0.5' />
+          <button
+            type='button'
+            onClick={getLocation}
+            data-cursor-hover
+            className='text-[#A32D1C] bg-[#211c19] border border-[#A32D1C]/40 px-3 py-2 rounded-xs cursor-pointer hover:bg-[#2a221e] active:scale-95 transition-all duration-300 flex justify-center items-center gap-2 w-full text-[0.625rem] tracking-[0.25em] uppercase'
+          >
+            <MapPin size={16} />
             Use my current location
           </button>
-          <span className='text-xs text-gray-300'>Or type your address manually below.</span>
+          <span className='text-[0.625rem] tracking-wide text-[#8D7E73]/60 mt-1 block'>
+            Or type your address manually below.
+          </span>
         </div>
 
         <div>
-          <label className='uppercase text-xs text-gray-300'>Address</label>
+          <label className='uppercase text-[0.625rem] tracking-[0.25em] text-[#8D7E73]'>Address</label>
           <input
             placeholder='Street, city, apt #'
             value={deliveryState.address}
             onChange={(e) => deliveryDispatch({ type: 'SET_ADDRESS', payload: e.target.value })}
-            className="flex h-10 w-full rounded-xl border border-gray-800 bg-transparent px-3 py-1 text-base shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:border-red-700 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm"
+            className="flex h-10 w-full rounded-xs border border-[#8D7E73]/30 bg-transparent px-3 py-1 text-sm text-white transition-colors duration-300 placeholder:text-[#8D7E73]/40 focus-visible:outline-none focus-visible:border-[#A32D1C]/60 disabled:cursor-not-allowed disabled:opacity-50"
           />
         </div>
 
         <div>
-          <label className='uppercase text-xs text-gray-300'>Order notes (optional)</label>
+          <label className='uppercase text-[0.625rem] tracking-[0.25em] text-[#8D7E73]'>Order notes (optional)</label>
           <textarea
             placeholder='Leave at the door, oat milk only...'
             value={formState.notes}
             onChange={(e) => formDispatch({ type: 'SET_NOTES', payload: e.target.value })}
-            className="flex w-full border border-gray-800 bg-transparent px-3 py-2 text-base shadow-sm focus-visible:outline-none focus-visible:border-red-700 disabled:cursor-not-allowed disabled:opacity-50 md:text-sm h-25 resize-none rounded-xl"
+            className="flex w-full rounded-xs border border-[#8D7E73]/30 bg-transparent px-3 py-2 text-sm text-white transition-colors duration-300 placeholder:text-[#8D7E73]/40 focus-visible:outline-none focus-visible:border-[#A32D1C]/60 disabled:cursor-not-allowed disabled:opacity-50 h-25 resize-none"
           />
         </div>
 
         <button
           type='submit'
-          disabled={!isDeliveryInfoProvided || submitState.loading}
-          className="w-full bg-red-700 hover:bg-red-600 active:scale-95 transition-all text-white font-semibold py-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed"
+          disabled={submitState.loading}
+          data-cursor-hover
+          className="w-full h-11 bg-[#9a2d1e] hover:bg-[#8d2414] transition-all duration-300 text-white text-[0.625rem] tracking-[0.25em] uppercase rounded-xs flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {submitState.loading ? 'Placing order...' : 'Place order'}
-          <ArrowRight size={18} />
+          Place order
+          <ArrowRight size={14} />
         </button>
       </div>
     </form>

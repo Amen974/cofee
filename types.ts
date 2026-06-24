@@ -106,7 +106,7 @@ export type UseBookingResult = {
   readonly book: () => Promise<void>;
 };
 
-export type Status = "idle" | "loading" | "itemAdded";
+export type Status = "idle" | "loading" | "itemAdded" | 'placing';
 
 export type ItemForm = Omit<Item, "id" | "created_at">;
 
@@ -169,3 +169,10 @@ export type SettingsForm = {
   tax_rate: number
   delivery_fee: number
 }
+
+export type CartState = 
+  | 'idle'
+  | 'Adding'
+  | 'Placing'
+  | 'Confirming'
+  | 'Locating'
