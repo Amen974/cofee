@@ -25,3 +25,12 @@
   content: '';
   animation: dots 1.5s infinite;
 }
+
+html {
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}

@@ -11,13 +11,13 @@ export default function MenuDashboardItemCard({ item }: { item: Item }) {
   const [isUpdating, setIsUpdating] = useState<boolean>(false)
 
   return (
-    <div className="border-2 border-red-700 rounded-2xl p-4 flex flex-col h-110 relative hover:shadow-lg hover:shadow-red-700/20">
+    <div className="border border-[#8D7E73]/20 bg-[#211c19] rounded-2xl p-4 flex flex-col h-110 w-62 relative hover:border-[#8D7E73]/40 transition-colors duration-300">
       <button
         onClick={() => updateIsAvailable(item.id, !isAvailable).then(() => setIsAvailable(!isAvailable))}
-        className={`absolute top-4 right-4 px-3 py-1 rounded-full font-bold text-sm transition-colors ${
+        className={`absolute top-4 right-4 px-3 py-1 rounded-full text-[0.625rem] tracking-[0.15em] uppercase transition-colors duration-300 ${
           isAvailable
-            ? "bg-green-500 text-white hover:bg-green-600"
-            : "bg-red-500 text-white hover:bg-red-600"
+            ? "bg-[#9a2d1e] text-white hover:bg-[#8d2414]"
+            : "bg-[#8D7E73]/20 text-[#8D7E73] hover:bg-[#8D7E73]/30"
         }`}
       >
         {isAvailable ? "Available" : "Unavailable"}
@@ -29,27 +29,27 @@ export default function MenuDashboardItemCard({ item }: { item: Item }) {
         width={200}
         height={200}
         loading="eager"
-        className="rounded-2xl object-cover h-50"
+        className="rounded-xl object-cover h-50"
       />
 
       <div>
-        <h1 className="text-red-700 text-4xl font-bold my-2">{item.name}</h1>
-        <p className="text-lg font-semibold mb-2 text-white">${item.price}</p>
+        <h1 className="text-[#A32D1C] text-4xl my-2">{item.name}</h1>
+        <p className="text-sm tracking-widest mb-2 text-[#8D7E73]">${item.price}</p>
       </div>
 
-      <div className="flex flex-col gap-3 mt-auto">
+      <div className="flex flex-col gap-2 mt-auto">
         <button
           onClick={() => setIsUpdating(true)}
-          className="bg-blue-600 text-white py-2 rounded-xl font-semibold
-            hover:bg-blue-700 transition-colors active:scale-95 cursor-pointer"
+          className="bg-[#8D7E73]/10 border border-[#8D7E73]/30 text-white py-2 rounded-xs text-[0.625rem] tracking-[0.2em] uppercase
+            hover:bg-[#8D7E73]/20 transition-colors duration-300 active:scale-95 cursor-pointer"
         >
           Update Item
         </button>
 
         <button
           onClick={() => {deleteItem(item.id)}}
-          className="bg-red-600 text-white py-2 rounded-xl font-semibold
-            hover:bg-red-700 transition-colors active:scale-95 cursor-pointer"
+          className="bg-[#9a2d1e] text-white py-2 rounded-xs text-[0.625rem] tracking-[0.2em] uppercase
+            hover:bg-[#8d2414] transition-colors duration-300 active:scale-95 cursor-pointer"
         >
           Delete Item
         </button>

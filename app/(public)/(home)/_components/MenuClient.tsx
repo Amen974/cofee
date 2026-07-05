@@ -6,12 +6,15 @@ import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import MenuItemCard from "./MenuItemCard"
 import { Item } from "@/types"
+import Image from "next/image"
 
 gsap.registerPlugin(useGSAP)
 
 export default function MenuClient({ items }: { items: Item[] }) {
   const [search, setSearch] = useState("")
   const containerRef = useRef<HTMLDivElement>(null)
+  const beanRightRef = useRef<HTMLDivElement>(null)
+  const beanLeftRef  = useRef<HTMLDivElement>(null)
 
   const filtered = items.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
@@ -20,23 +23,25 @@ export default function MenuClient({ items }: { items: Item[] }) {
   useGSAP(() => {
     const tl = gsap.timeline({ defaults: { ease: "power4.out" } })
 
-    tl.fromTo(
-      ".reveal-line",
-      { yPercent: 100 },
-      { yPercent: 0, duration: 1.2, stagger: 0.1 }
-    )
-      .fromTo(
-        ".menu-title",
+    tl.fromTo(".menu-title",
         { autoAlpha: 0, y: 40 },
-        { autoAlpha: 1, y: 0, duration: 1.2 },
-        "-=0.9"
-      )
-      .fromTo(
-        ".menu-search",
+        { autoAlpha: 1, y: 0, duration: 1.2 })
+      .fromTo(".reveal-line",
+        { yPercent: 100 },
+        { yPercent: 0, duration: 1.2, stagger: 0.1 },
+        "-=0.9")
+      .fromTo(".menu-search",
         { autoAlpha: 0, y: 15 },
         { autoAlpha: 1, y: 0, duration: 0.7 },
-        "-=0.6"
-      )
+        "<")
+      .fromTo(beanRightRef.current,
+        { x: 220, y: 220, autoAlpha: 0, scale: 0.82 },
+        { x: 0, y: 0, autoAlpha: 1, scale: 1, duration: 0.85, ease: "power3.out" },
+        "-=0.5")
+      .fromTo(beanLeftRef.current,
+        { x: -220, y: 220, autoAlpha: 0, scale: 0.82 },
+        { x: 0, y: 0, autoAlpha: 1, scale: 1, duration: 0.85, ease: "power3.out" },
+        "<")
   }, { scope: containerRef })
 
   useGSAP(() => {
@@ -93,6 +98,15 @@ export default function MenuClient({ items }: { items: Item[] }) {
           No items match your search.
         </p>
       )}
+
+      <div ref={beanRightRef} className="fixed bottom-[-60] right-0 w-50 h-50 md:w-75 md:h-75 pointer-events-none">
+        <Image src="/coffee-beans-bottom-right.png" alt="right-beans"
+          fill loading="eager" className="object-contain" />
+      </div>
+      <div ref={beanLeftRef} className="fixed bottom-[-60] left-0 w-50 h-50 md:w-75 md:h-75 pointer-events-none">
+        <Image src="/coffee-beans-bottom-left.png" alt="left-beans"
+          fill loading="eager" className="object-contain" />
+      </div>
     </main>
   )
 }

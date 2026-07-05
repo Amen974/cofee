@@ -24,7 +24,7 @@ const BookingClient = ({ settings }: { settings: ReservationSettings }) => {
         <p className="text-[11px] tracking-[0.18em] uppercase text-neutral-600">
           Reserve a table
         </p>
-
+        
         <div className="flex flex-wrap gap-4">
           <div className="flex-1 min-w-50 border border-neutral-800 rounded-2xl p-5 bg-neutral-950">
             <p className="text-[11px] tracking-[0.15em] uppercase text-neutral-600 mb-4">When</p>

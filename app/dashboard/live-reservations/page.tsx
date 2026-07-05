@@ -4,17 +4,17 @@ import { Clock, Phone, Users } from 'lucide-react'
 import { ReservationFilter, useReservations } from './useReservations'
 
 const statusStyles: Record<ReservationFilter, string> = {
-  confirmed: 'bg-green-500/10 text-green-400 border border-green-500/20',
-  cancelled: 'bg-red-500/10 text-red-400 border border-red-500/20',
-  no_show: 'bg-neutral-800/10 text-neutral-300 border border-neutral-700/20',
-  completed: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
+  confirmed: 'bg-[#A32D1C]/10 text-[#A32D1C] border border-[#A32D1C]/30',
+  cancelled: 'bg-[#8D7E73]/10 text-[#8D7E73] border border-[#8D7E73]/30',
+  no_show: 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/30',
+  completed: 'bg-[#8D7E73]/15 text-white border border-[#8D7E73]/30',
 }
 
 const statusDot: Record<ReservationFilter, string> = {
-  confirmed: 'bg-green-400',
-  cancelled: 'bg-red-400',
-  no_show: 'bg-neutral-400',
-  completed: 'bg-blue-400',
+  confirmed: 'bg-[#A32D1C]',
+  cancelled: 'bg-[#8D7E73]',
+  no_show: 'bg-yellow-500',
+  completed: 'bg-white',
 }
 
 function timeAgo(iso: string): string {
@@ -45,8 +45,8 @@ export default function LiveReservationsPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 text-neutral-500">
-        <Users className="animate-pulse w-8 h-8 mr-2" />
+      <div className="flex items-center justify-center h-64 text-[#8D7E73] gap-2 text-xs tracking-[0.2em] uppercase">
+        <Users className="animate-pulse w-6 h-6" />
         Loading reservations...
       </div>
     )
@@ -54,85 +54,86 @@ export default function LiveReservationsPage() {
 
   if (!reservations.length) {
     return (
-      <div className="flex flex-col items-center justify-center h-64 text-neutral-500 gap-2">
+      <div className="flex flex-col items-center justify-center h-64 text-[#8D7E73] gap-2">
         <Users className="w-10 h-10 opacity-30" />
-        <p className="text-sm">No reservations yet</p>
+        <p className="text-xs tracking-[0.2em] uppercase">No reservations yet</p>
       </div>
     )
   }
 
   return (
-    <div className="p-4">
-      <div className="flex mb-4 gap-4">
+    <div className="p-6 min-h-screen text-[#8D7E73]">
+      <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
+        <h1 className="text-3xl text-[#A32D1C] shrink-0">Live Reservations</h1>
+
         <div className="flex flex-1 gap-2 flex-wrap">
           {RESERVATION_STATUSES.map((status) => (
             <button
               key={status}
               onClick={() => setFilter(status)}
-              className={`text-xs px-3.5 py-1.5 rounded-full border transition-all ${
+              className={`text-[0.625rem] tracking-[0.2em] uppercase px-3.5 py-1.5 rounded-full border transition-colors duration-300 ${
                 filter === status
-                  ? 'bg-red-700 text-white border-transparent'
-                  : 'border-neutral-700 text-neutral-400 hover:bg-neutral-800 hover:text-neutral-200'
+                  ? 'bg-[#9a2d1e] text-white border-transparent'
+                  : 'border-[#8D7E73]/30 text-[#8D7E73] hover:bg-[#8D7E73]/10 hover:text-[#A32D1C]'
               }`}
             >
               {status.replace('_', ' ').replace(/\b\w/g, (char) => char.toUpperCase())}
             </button>
           ))}
         </div>
-        <div>
-          <input
-            type="text"
-            placeholder="Search reservations..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 placeholder:text-neutral-500 focus:ring-1 focus:ring-blue-500 outline-none h-8"
-          />
-        </div>
+
+        <input
+          type="text"
+          placeholder="Search reservations..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="bg-[#211c19] border border-[#8D7E73]/30 rounded-xs text-xs tracking-widest text-white placeholder:text-[#8D7E73]/60 outline-none h-9 px-3 transition-colors duration-300 focus:border-[#A32D1C]/60"
+        />
       </div>
 
       <div className="flex flex-wrap gap-4 justify-center md:justify-start">
         {filteredReservations.map((reservation) => (
           <div
             key={reservation.id}
-            className="bg-neutral-900 border border-neutral-800 rounded-xl p-4 w-72 flex flex-col gap-3 hover:border-neutral-700 transition-colors"
+            className="bg-[#211c19] border border-[#8D7E73]/20 rounded-2xl p-4 w-72 flex flex-col gap-3 hover:border-[#8D7E73]/40 transition-colors duration-300"
           >
             <div className="flex items-start justify-between gap-2">
               <div>
-                <h2 className="text-white font-semibold text-xl leading-tight">{reservation.guest_name}</h2>
-                <p className="text-xs text-neutral-500">
+                <h2 className="text-white text-xl leading-tight">{reservation.guest_name}</h2>
+                <p className="text-xs text-[#8D7E73]/70">
                   {reservation.reservation_date} · {reservation.start_time} – {reservation.end_time}
                 </p>
               </div>
-              <span className={`text-xs px-2.5 py-1 rounded-full flex items-center gap-1.5 shrink-0 ${statusStyles[reservation.status]}`}>
+              <span className={`text-[0.625rem] tracking-[0.15em] uppercase px-2.5 py-1 rounded-full flex items-center gap-1.5 shrink-0 ${statusStyles[reservation.status]}`}>
                 <span className={`w-1.5 h-1.5 rounded-full ${statusDot[reservation.status]}`} />
                 {reservation.status.replace('_', ' ')}
               </span>
             </div>
 
-            <div className="flex items-center gap-1.5 text-neutral-400 text-sm">
+            <div className="flex items-center gap-1.5 text-[#8D7E73] text-sm">
               <Phone className="w-3.5 h-3.5" />
               {reservation.guest_phone}
             </div>
 
-            <div className="flex items-center gap-1.5 text-neutral-400 text-sm">
+            <div className="flex items-center gap-1.5 text-[#8D7E73] text-sm">
               <Users className="w-3.5 h-3.5" />
               Party of {reservation.party_size}
             </div>
 
-            <div className="border-t border-neutral-800" />
+            <div className="border-t border-[#8D7E73]/20" />
 
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1 text-xs text-neutral-500">
+              <span className="flex items-center gap-1 text-xs text-[#8D7E73]/70">
                 <Clock className="w-3 h-3" />
                 {timeAgo(reservation.created_at)}
               </span>
-              <span className="text-xs text-neutral-400">Created</span>
+              <span className="text-xs text-[#8D7E73]/70">Created</span>
             </div>
 
             <select
               value={reservation.status}
               onChange={(event) => updateStatus(reservation.id, event.target.value as ReservationFilter)}
-              className="bg-neutral-800 border border-neutral-700 rounded-lg text-xs text-neutral-300 px-3 py-2 outline-none cursor-pointer hover:border-neutral-600 transition-colors"
+              className="bg-[#1b1816] border border-[#8D7E73]/30 rounded-xs text-xs tracking-widest text-[#8D7E73] px-3 py-2 outline-none cursor-pointer hover:border-[#A32D1C]/40 transition-colors duration-300"
             >
               {RESERVATION_STATUSES.map((status) => (
                 <option key={status} value={status}>

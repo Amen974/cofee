@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server"
 import { cookies } from "next/headers"
 import MenuClient from "../_components/MenuClient"
 
+
 export default async function MenuPage() {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
@@ -15,5 +16,6 @@ export default async function MenuPage() {
     return <div>Error fetching menu items.</div>;
   }
 
-   return <MenuClient items={items ?? []} />
+  return <MenuClient items={items ?? []} />
+
 }

@@ -1,4 +1,4 @@
-import CartButton from "../components/CartButton"
+
 import IsOpen from "../components/IsOpen"
 
 export default function PublicLayout({
@@ -9,7 +9,6 @@ export default function PublicLayout({
   return (
     <>
       <IsOpen />
-      <CartButton />
       <main className="relative">
         {children}
       </main>
