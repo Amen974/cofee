@@ -62,6 +62,8 @@ export type ReservationSettings = {
   readonly max_party_size: number;
   readonly min_party_size: number;
   readonly max_booking_days: number;
+  readonly timezone: string;
+  readonly lead_time_min: number;
 };
 
 export type Slot = string;
