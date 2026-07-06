@@ -6,6 +6,7 @@ import {
   MenuItemFormProps,
 } from "@/types";
 import { deleteImage, updateItem, uploadImage } from "./actions";
+import { useCartIndicator } from "@/lib/store/useCartIndicator";
 
 const formReducer = (
   state: FormState,
@@ -55,10 +56,13 @@ export const useMenuItemForm = (
     quantity,
   } = state;
 
+  const { setCartState, reset } = useCartIndicator()
+
   const handleSubmit = async (
     event: FormEvent<HTMLFormElement>,
   ): Promise<void> => {
     event.preventDefault();
+    setCartState('Saving')
     dispatch({ type: "SET_IS_SAVING", payload: true });
 
     const formData: ItemForm = {
@@ -80,6 +84,7 @@ export const useMenuItemForm = (
     } finally {
       setIsUpdating(false);
       dispatch({ type: "SET_IS_SAVING", payload: false });
+      reset();
     }
   };
 
@@ -91,6 +96,7 @@ export const useMenuItemForm = (
     if (!file) return;
 
     dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: true });
+    setCartState('Uploading')
 
     try {
       const uploadResult = await uploadImage(file);
@@ -107,8 +113,23 @@ export const useMenuItemForm = (
       console.error("Error uploading image:", error);
     } finally {
       dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: false });
+      reset();
     }
   };
+
+  const handleCancel = async (): Promise<void> => {
+  if (imageUrl && imageUrl !== item.image_url) {
+    try {
+      setCartState('Deleting')
+      await deleteImage(imageUrl);
+    } catch (error) {
+      console.error("Error deleting orphaned image:", error);
+      reset();
+    }
+  }
+  setIsUpdating(false);
+  reset();
+};
 
   return {
     state,
@@ -122,6 +143,7 @@ export const useMenuItemForm = (
     quantity,
     handleSubmit,
     handleImageChange,
+    handleCancel,
   };
 };
 

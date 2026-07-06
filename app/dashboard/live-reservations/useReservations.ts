@@ -6,7 +6,7 @@ const supabase = createClient()
 
 export type ReservationFilter = ReservationStatus
 export const RESERVATION_STATUSES: ReservationFilter[] = [
-  'confirmed',
+  'pending',
   'cancelled',
   'no_show',
   'completed',
@@ -27,7 +27,7 @@ export interface UseReservationsResult {
 export const useReservations = (): UseReservationsResult => {
   const [reservations, setReservations] = useState<Reservation[]>([])
   const [loading, setLoading] = useState<boolean>(true)
-  const [filter, setFilter] = useState<ReservationFilter>('confirmed')
+  const [filter, setFilter] = useState<ReservationFilter>('pending')
   const [search, setSearch] = useState<string>('')
 
   const updateStatus = async (id: string, status: ReservationFilter): Promise<void> => {

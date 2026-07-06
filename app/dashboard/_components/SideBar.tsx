@@ -74,7 +74,7 @@ const SideBar = () => {
   };
 
   return (
-    <aside className="flex-col min-h-screen text-sm transition-all duration-300 w-64 py-8 px-4 text-[#8D7E73] border-r border-[#8D7E73]/20 relative hidden md:flex">
+    <aside className="flex-col fixed text-sm transition-all duration-300 w-64 py-8 px-4 text-[#8D7E73] border-r border-[#8D7E73]/20 hidden md:flex">
       <div className="mb-8 px-3">
         <h1 className="text-2xl text-[#A32D1C] leading-none">Dashboard</h1>
         <p className="text-[0.625rem] tracking-[0.25em] uppercase mt-1 text-[#8D7E73]/70">
@@ -90,6 +90,7 @@ const SideBar = () => {
             <NavLink
               key={item.href}
               href={item.href}
+              data-cursor-hover
               className={getNavItemClasses(item.href)}
             >
               <Icon size={16} />
@@ -113,11 +114,12 @@ const SideBar = () => {
         </div>
         <button
           onClick={toggle}
+          data-cursor-hover
           aria-label="Toggle store status"
-          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 cursor-pointer ${isOpen ? 'bg-[#9a2d1e]' : 'bg-[#8D7E73]/30'
+          className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-100 cursor-pointer ${isOpen ? 'bg-[#9a2d1e]' : 'bg-[#8D7E73]/30'
             }`}
         >
-          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 ${isOpen ? 'translate-x-6' : 'translate-x-1'
+          <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-100 ${isOpen ? 'translate-x-6' : 'translate-x-1'
             }`} />
         </button>
       </div>

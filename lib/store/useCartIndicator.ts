@@ -8,7 +8,7 @@ interface CartIndicatorStore {
 }
 
 export const useCartIndicator = create<CartIndicatorStore>((set) => ({
-  cartState: 'idle',
+  cartState: 'Idle',
   setCartState: (cartState) => set({ cartState }),
-  reset: () => set({ cartState:'idle' }),
+  reset: () => set({ cartState:'Idle' }),
 }))

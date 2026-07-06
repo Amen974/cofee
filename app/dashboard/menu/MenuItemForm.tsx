@@ -17,6 +17,7 @@ const MenuItemForm = ({ item, setIsUpdating }: MenuItemFormProps): ReactElement 
     handleSubmit,
     handleImageChange,
     dispatch,
+    handleCancel,
   } = useMenuItemForm(item, setIsUpdating)
 
   const uploadInputId = `menu-item-image-upload-${item.id}`
@@ -87,10 +88,9 @@ const MenuItemForm = ({ item, setIsUpdating }: MenuItemFormProps): ReactElement 
           Price
           <input
             type="number"
-            step="0.01"
             value={price}
             onChange={(event) => dispatch({ type: "SET_PRICE", payload: event.target.value })}
-            className="rounded-xs border border-[#8D7E73]/30 bg-[#1b1816] px-3 py-2 text-sm tracking-normal text-white outline-none transition-colors duration-300 focus:border-[#A32D1C]/60"
+            className="rounded-xs border border-[#8D7E73]/30 bg-[#1b1816] px-3 py-2 text-sm tracking-normal text-white transition-colors duration-300 focus:border-[#A32D1C]/60 outline-none"
           />
         </label>
 
@@ -100,7 +100,7 @@ const MenuItemForm = ({ item, setIsUpdating }: MenuItemFormProps): ReactElement 
             type="number"
             value={quantity}
             onChange={(event) => dispatch({ type: "SET_QUANTITY", payload: event.target.value })}
-            className="rounded-xs border border-[#8D7E73]/30 bg-[#1b1816] px-3 py-2 text-sm tracking-normal text-white outline-none transition-colors duration-300 focus:border-[#A32D1C]/60"
+            className="rounded-xs border border-[#8D7E73]/30 bg-[#1b1816] px-3 py-2 text-sm tracking-normal text-white transition-colors duration-300 focus:border-[#A32D1C]/60 outline-none"
           />
         </label>
       </div>
@@ -111,12 +111,16 @@ const MenuItemForm = ({ item, setIsUpdating }: MenuItemFormProps): ReactElement 
           disabled={isSaving}
           className="rounded-xs bg-[#9a2d1e] px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-white transition-colors duration-300 hover:bg-[#8d2414] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {isSaving ? "Saving..." : "Save Item"}
+          Save
         </button>
 
         <button
           type="button"
-          onClick={() => setIsUpdating(false)}
+          onClick={() => {
+            handleCancel()
+            setIsUpdating(false)
+          }
+          }
           className="rounded-xs bg-[#8D7E73]/15 border border-[#8D7E73]/30 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-white transition-colors duration-300 hover:bg-[#8D7E73]/25"
         >
           Cancel

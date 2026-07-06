@@ -24,7 +24,7 @@ export type Item = {
 };
 
 export type ReservationStatus =
-  | "confirmed"
+  | "pending"
   | "cancelled"
   | "no_show"
   | "completed";
@@ -163,8 +163,8 @@ export type SettingsForm = {
   close_time: string
   slot_interval: number
   total_capacity: number
-  session_duration: number
-  cleaning_buffer: number
+  session_duration_min: number
+  cleaning_buffer_min: number
   max_party_size: number
   min_party_size: number
   max_booking_days: number
@@ -173,8 +173,14 @@ export type SettingsForm = {
 }
 
 export type CartState = 
-  | 'idle'
+  | 'Idle'
   | 'Adding'
   | 'Placing'
   | 'Confirming'
   | 'Locating'
+  | 'Saving'
+  | 'Opening'
+  | 'Closing'
+  | 'Deleting'
+  | 'Uploading'
+  | 'Canceling'

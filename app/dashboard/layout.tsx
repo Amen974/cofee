@@ -6,9 +6,9 @@ export default function DashboardLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen flex">
+    <div className="flex">
       <SideBar />
-      <main className="flex-1">{children}</main>
+      <main className="flex-1 md:pl-64">{children}</main>
     </div>
   )
 }

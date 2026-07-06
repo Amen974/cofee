@@ -4,6 +4,7 @@ import React, { ChangeEvent, FormEvent, ReactElement, useReducer } from "react"
 import Image from "next/image"
 import { AddMenuItemState, ItemForm, AddMenuItemAction } from "@/types"
 import { addItem, uploadImage } from "./actions"
+import { useCartIndicator } from "@/lib/store/useCartIndicator"
 
 const AddMenuItem = (): ReactElement => {
   const initialState: AddMenuItemState = {
@@ -44,13 +45,15 @@ const AddMenuItem = (): ReactElement => {
 
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const { setCartState, reset } = useCartIndicator()
+
   const uploadInputId = `menu-item-image-upload-new`
 
   const handleImageChange = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
     const file = event.target.files?.[0]
     if (!file) return
     dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: true })
-
+    setCartState('Uploading')
     try {
       const result = await uploadImage(file)
       if (!result.success) {
@@ -63,12 +66,14 @@ const AddMenuItem = (): ReactElement => {
       console.error("[AddMenuItem] Error uploading image:", error)
     } finally {
       dispatch({ type: "SET_IS_UPLOADING_IMAGE", payload: false })
+      reset()
     }
   }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault()
     dispatch({ type: "SET_IS_SAVING", payload: true })
+    setCartState('Adding')
     const formData: ItemForm = {
       name: state.name,
       description: state.description,
@@ -89,6 +94,7 @@ const AddMenuItem = (): ReactElement => {
       console.error("[AddMenuItem] Error adding item:", error)
     } finally {
       dispatch({ type: "SET_IS_SAVING", payload: false })
+      reset()
     }
   }
 
@@ -168,7 +174,7 @@ const AddMenuItem = (): ReactElement => {
                   disabled={state.isSaving}
                   className="rounded-xs bg-[#9a2d1e] px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-white transition-colors duration-300 hover:bg-[#8d2414] disabled:cursor-not-allowed disabled:opacity-60"
                 >
-                  {state.isSaving ? "Saving..." : "Add Item"}
+                  Add
                 </button>
 
                 <button

@@ -14,42 +14,14 @@ function resolveDisplay(
   cartState: CartState
 ): Display {
   if (isNavigating) {
-    return {
-      visible: true,
-      message: 'Rendering',
-    }
+    return { visible: true, message: 'Rendering' }
   }
 
-  switch (cartState) {
-    case 'Adding':
-      return {
-        visible: true,
-        message: 'Adding',
-      }
-
-    case 'Placing':
-      return {
-        visible: true,
-        message: 'Placing',
-      }
-
-    case 'Confirming':
-      return {
-        visible: true,
-        message: 'Confirming',
-      }
-
-    case 'Locating':
-      return {
-        visible: true,
-        message: 'Locating',
-      }
-
-    default:
-      return {
-        visible: false,
-      }
+  if (cartState === 'Idle') {
+    return { visible: false }
   }
+
+  return { visible: true, message: cartState }
 }
 
 export default function CartButton() {
