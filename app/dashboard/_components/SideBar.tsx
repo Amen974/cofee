@@ -73,7 +73,15 @@ const SideBar = () => {
     return `${baseClasses} ${activeClasses}`;
   };
 
+  const shortLabels: Record<string, string> = {
+    'Live Orders': 'Orders',
+    'Live Reservations': 'Reservations',
+    'Menu': 'Menu',
+    'Restaurant Settings': 'Settings',
+  };
+
   return (
+    <>
     <aside className="flex-col fixed text-sm transition-all duration-300 w-64 py-8 px-4 text-[#8D7E73] border-r border-[#8D7E73]/20 hidden md:flex">
       <div className="mb-8 px-3">
         <h1 className="text-2xl text-[#A32D1C] leading-none">Dashboard</h1>
@@ -124,6 +132,34 @@ const SideBar = () => {
         </button>
       </div>
     </aside>
+
+    <nav className="fixed bottom-0 inset-x-0 z-40 flex items-stretch justify-evenly h-16 bg-[#0E0D0B] border-t border-[#8D7E73]/20 md:hidden">
+        {navItems.map((item) => {
+          const Icon = item.icon;
+          const badgeCount = getBadgeCount(item.badgeType);
+          const active = isActive(item.href);
+          return (
+            <NavLink
+              key={item.href}
+              href={item.href}
+              data-cursor-hover
+              className={`relative flex flex-1 flex-col items-center justify-center gap-1 text-[0.625rem] tracking-widest uppercase transition-colors duration-300 ${active ? 'text-[#A32D1C]' : 'text-[#8D7E73]'
+                }`}
+            >
+              <span className="relative">
+                <Icon size={20} />
+                {badgeCount !== null && badgeCount > 0 && (
+                  <span className="absolute -top-1.5 -right-2 min-w-4 px-1 h-4 rounded-full bg-[#9a2d1e] text-white text-[0.55rem] leading-4 text-center">
+                    {badgeCount}
+                  </span>
+                )}
+              </span>
+              <span>{shortLabels[item.label] ?? item.label}</span>
+            </NavLink>
+          );
+        })}
+      </nav>
+    </>
   )
 }
 

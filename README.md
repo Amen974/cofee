@@ -112,7 +112,9 @@ create table public.restaurant_settings (
  ┃ ┣ 📜CartButton.tsx
  ┃ ┣ 📜CustomCursor.tsx
  ┃ ┣ 📜IsOpen.tsx
- ┃ ┗ 📜Navbar.tsx
+ ┃ ┣ 📜Navbar.tsx
+ ┃ ┣ 📜NavigationObserver.tsx
+ ┃ ┗ 📜NavLink.tsx
  ┣ 📂dashboard
  ┃ ┣ 📂live-orders
  ┃ ┃ ┣ 📜page.tsx

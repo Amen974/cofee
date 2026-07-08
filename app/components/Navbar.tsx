@@ -4,6 +4,9 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useState } from "react";
 import NavLink from "./NavLink";
+import { usePathname } from "next/navigation";
+import { logout } from "../login/actions";
+import { useCartIndicator } from "@/lib/store/useCartIndicator";
 
 interface NavItem {
   label: string;
@@ -20,20 +23,33 @@ const navItems: NavItem[] = [
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuLinksRef = useRef<HTMLDivElement>(null)
+  const { setCartState, reset } = useCartIndicator()
 
   const toggleMenu = (): void => setIsOpen(!isOpen);
   const closeMenu = (): void => setIsOpen(false);
 
+  const pathname = usePathname()
+
+  const handleLogout = async (): Promise<void> => {
+    setCartState('Confirming')
+
+    try {
+      await logout()
+    } finally {
+      reset()
+    }
+  }
+
   useGSAP(() => {
-    if(isOpen && menuLinksRef.current) {
+    if (isOpen && menuLinksRef.current) {
       gsap.fromTo(
-          menuLinksRef.current.children,
-          { opacity: 0, y: 20 },
-          { opacity: 1, y: 0, stagger: 0.1, duration: 0.5, ease: "power3.out", delay: 0.3 }
-        )
+        menuLinksRef.current.children,
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, stagger: 0.1, duration: 0.5, ease: "power3.out", delay: 0.3 }
+      )
     }
   }, [isOpen])
-  
+
 
   return (
     <header className="sticky top-0 w-full bg-[#0E0D0B] z-40 flex items-center justify-between px-6 py-6 md:px-6 lg:px-12 md:py-6 border-b border-[#2A1F1C]/40">
@@ -60,22 +76,46 @@ const Navbar = () => {
         ))}
       </nav>
       <div className="hidden md:flex items-center space-x-6">
-        <NavLink
-          href="/login"
-          data-cursor-hover
-          className="text-[11px] tracking-[0.2em] text-[#8D7E73] hover:text-[#E8E0D8] flex items-center space-x-2 transition-colors duration-300"
-        >
-          <svg
-            className="w-4 h-4 text-[#7C1515]"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            viewBox="0 0 24 24"
+        {pathname.startsWith('/dashboard') ? (
+          <button
+            onClick={handleLogout}
+            data-cursor-hover
+            className="text-[11px] tracking-[0.2em] text-[#8D7E73] hover:text-[#E8E0D8] flex items-center space-x-2 transition-colors duration-300 cursor-pointer"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-          </svg>
-          <span>ONLY WORKERS</span>
-        </NavLink>
+            <svg
+              className="w-5 h-5 text-[#7C1515]"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"
+              />
+            </svg>
+            <span>LOGOUT</span>
+          </button>
+        ) : (
+          <NavLink
+            href="/login"
+            data-cursor-hover
+            className="text-[11px] tracking-[0.2em] text-[#8D7E73] hover:text-[#E8E0D8] flex items-center space-x-2 transition-colors duration-300"
+          >
+            <svg
+              className="w-4 h-4 text-[#7C1515]"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+            </svg>
+            <span>ONLY WORKERS</span>
+          </NavLink>
+        )}
+
         <NavLink
           href="/reservation"
           data-cursor-hover
@@ -134,16 +174,41 @@ const Navbar = () => {
           ))}
         </nav>
         <div className="space-y-4 pt-6 border-t border-[#2A1F1C]">
-          <NavLink
-            href="/login"
-            onClick={closeMenu}
-            className="w-full py-4 bg-[#2A1F1C]/40 border border-[#2A1F1C] hover:border-[#7C1515] flex items-center justify-center space-x-3 text-xs tracking-[0.2em] text-[#E8E0D8] transition-colors rounded-sm"
-          >
-            <svg className="w-4 h-4 text-[#7C1515]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-            </svg>
-            <span>ONLY WORKERS</span>
-          </NavLink>
+          {pathname.startsWith('/dashboard') ? (
+            <button
+              onClick={() => {
+                closeMenu()
+                handleLogout()
+              }}
+              className="w-full py-4 bg-[#2A1F1C]/40 border border-[#2A1F1C] hover:border-[#7C1515] flex items-center justify-center space-x-3 text-xs tracking-[0.2em] text-[#E8E0D8] transition-colors rounded-sm"
+            >
+              <svg
+                className="w-4 h-4 text-[#7C1515]"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.75 9V5.25A2.25 2.25 0 0 0 13.5 3h-6a2.25 2.25 0 0 0-2.25 2.25v13.5A2.25 2.25 0 0 0 7.5 21h6a2.25 2.25 0 0 0 2.25-2.25V15M12 9l-3 3m0 0 3 3m-3-3h12.75"
+                />
+              </svg>
+              <span>LOGOUT</span>
+            </button>
+          ) : (
+            <NavLink
+              href="/login"
+              onClick={closeMenu}
+              className="w-full py-4 bg-[#2A1F1C]/40 border border-[#2A1F1C] hover:border-[#7C1515] flex items-center justify-center space-x-3 text-xs tracking-[0.2em] text-[#E8E0D8] transition-colors rounded-sm"
+            >
+              <svg className="w-4 h-4 text-[#7C1515]" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+              </svg>
+              <span>ONLY WORKERS</span>
+            </NavLink>
+          )}
         </div>
       </div>
 
