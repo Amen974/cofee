@@ -122,7 +122,7 @@ const Hero = () => {
           const Icon = stat.icon
           return (
             <div key={stat.label} className='hero-stat flex-1 flex items-center'>
-              <Icon className="w-5 h-5 text-yellow-800 mr-2.5" />
+              <Icon className="w-5 h-5 text-[#9a2d1e] mr-2.5" />
               <div className="flex flex-col">
                 <span className="text-[0.625rem] tracking-[0.25em] text-white uppercase font-semibold">
                   {stat.value}

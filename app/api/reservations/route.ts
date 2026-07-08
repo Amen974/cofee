@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const supabase = createClient(cookieStore)
 
   const body = await req.json()
-  const { date, start_time, party_size, guest_name, guest_phone, timeZone, leadTimeMin } = body
+  const { date, start_time, party_size, guest_name, guest_phone } = body
 
   if (!date || !start_time || !party_size || !guest_name || !guest_phone)
     return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Could not load settings' }, { status: 500 })
 
   const { open_time, close_time, slot_interval, total_capacity,
-        session_duration_min, cleaning_buffer_min, max_party_size } = settings
+        session_duration_min, cleaning_buffer_min, max_party_size, timeZone, leadTimeMin } = settings
 
   if (party_size > max_party_size)
     return NextResponse.json({ error: `Max party size is ${max_party_size}` }, { status: 400 })
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     .from('reservations')
     .select('start_time, end_time, party_size')
     .eq('reservation_date', date)
-    .eq('status', 'confirmed')
+    .eq('status', 'pending')
 
   if (rErr)
     return NextResponse.json({ error: 'Could not validate availability' }, { status: 500 })

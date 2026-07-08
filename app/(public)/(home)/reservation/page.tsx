@@ -11,7 +11,9 @@ const isValidSettings = (settings: ReservationSettings): boolean =>
   Number.isInteger(settings.lead_time_min) &&
   settings.min_party_size >= 1 &&
   settings.max_party_size >= settings.min_party_size &&
-  settings.max_booking_days >= 1
+  settings.max_booking_days >= 1 &&
+  settings.lead_time_min >= 0 &&
+  settings.timezone.length > 0
 
 export default async function Page() {
   const cookieStore = await cookies()

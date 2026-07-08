@@ -100,7 +100,7 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
       try {
         const response = await fetch(
           `/api/availability?date=${encodeURIComponent(state.date)}&party_size=${state.partySize}` +
-            `&time_zone=${encodeURIComponent(settings.timezone)}&lead_time_min=${settings.lead_time_min}`,
+            `&timezone=${encodeURIComponent(settings.timezone)}&lead_time_min=${settings.lead_time_min}`,
         );
         const data = await response.json();
 
@@ -197,8 +197,6 @@ export const useBooking = (settings: ReservationSettings): UseBookingResult => {
           party_size: state.partySize,
           guest_name: trimmedName,
           guest_phone: trimmedPhone,
-          timeZone: settings.timezone,
-          leadTimeMin: settings.lead_time_min,
         }),
       });
 

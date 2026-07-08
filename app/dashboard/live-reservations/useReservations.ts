@@ -22,6 +22,20 @@ export interface UseReservationsResult {
   readonly setSearch: React.Dispatch<React.SetStateAction<string>>;
   readonly filteredReservations: Reservation[];
   readonly updateStatus: (id: string, status: ReservationFilter) => Promise<void>;
+  readonly timeAgo: (iso: string) => string;
+}
+
+function timeAgo(iso: string): string {
+  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
+  if (diff < 1) return 'just now'
+  if (diff === 1) return '1 min ago'
+  if (diff < 60) return `${diff} mins ago`
+  const hours = Math.floor(diff / 60)
+  const minutes = diff % 60
+  if (hours === 1 && minutes === 0) return '1h ago'
+  if (hours === 1) return `1h ${minutes}m ago`
+  if (minutes === 0) return `${hours}h ago`
+  return `${hours}h ${minutes}m ago`
 }
 
 export const useReservations = (): UseReservationsResult => {
@@ -133,5 +147,6 @@ export const useReservations = (): UseReservationsResult => {
     setSearch,
     filteredReservations,
     updateStatus,
+    timeAgo,
   }
 }

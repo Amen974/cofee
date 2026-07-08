@@ -53,7 +53,7 @@ export default function MenuClient({ items }: { items: Item[] }) {
   }, { scope: containerRef, dependencies: [search], revertOnUpdate: true })
 
   return (
-    <main ref={containerRef} className="text-[#8D7E73] relative">
+    <main ref={containerRef} className="text-[#8D7E73] relative pb-15">
       <div className="text-center mb-10 md:mb-14">
         <h1 className="menu-title text-[clamp(2rem,12vw,6rem)] text-[#A32D1C]">
           The Menu

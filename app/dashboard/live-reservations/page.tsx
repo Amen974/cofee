@@ -24,19 +24,6 @@ const statusDot: Record<ReservationFilter, string> = {
   completed: 'bg-green-500',
 }
 
-function timeAgo(iso: string): string {
-  const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 60000)
-  if (diff < 1) return 'just now'
-  if (diff === 1) return '1 min ago'
-  if (diff < 60) return `${diff} mins ago`
-  const hours = Math.floor(diff / 60)
-  const minutes = diff % 60
-  if (hours === 1 && minutes === 0) return '1h ago'
-  if (hours === 1) return `1h ${minutes}m ago`
-  if (minutes === 0) return `${hours}h ago`
-  return `${hours}h ${minutes}m ago`
-}
-
 export default function LiveReservationsPage() {
   const {
     RESERVATION_STATUSES,
@@ -48,6 +35,7 @@ export default function LiveReservationsPage() {
     setSearch,
     filteredReservations,
     updateStatus,
+    timeAgo,
   } = useReservations()
 
   if (loading) {
@@ -73,7 +61,7 @@ export default function LiveReservationsPage() {
       <div className="flex items-center justify-between mb-6 gap-3 flex-wrap sticky top-0 z-10  backdrop-blur-sm py-3 -mx-6 px-6">
         <h1 className="text-2xl font-semibold text-[#A32D1C] shrink-0">Live Reservations</h1>
 
-        <div className="flex flex-1 gap-2 flex-wrap">
+        <div className="flex gap-2 flex-wrap">
           {RESERVATION_STATUSES.map((status) => (
             <button
               key={status}

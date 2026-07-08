@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url)
   const date = searchParams.get('date')
   const partySizeRaw = searchParams.get('party_size')
-  const timeZone = searchParams.get('time_zone') || 'UTC'
+  const timeZone = searchParams.get('timezone') || 'UTC'
   const leadTimeMin = parseInt(searchParams.get('lead_time_min') || '0')
   if (!date || !partySizeRaw)
     return NextResponse.json({ error: 'date and party_size are required' }, { status: 400 })
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     .from('reservations')
     .select('start_time, end_time, party_size')
     .eq('reservation_date', date)
-    .eq('status', 'confirmed')
+    .eq('status', 'pending')
 
   if (rErr)
     return NextResponse.json({ error: 'Could not load reservations' }, { status: 500 })

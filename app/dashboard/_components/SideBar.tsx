@@ -10,27 +10,27 @@ interface NavItem {
   readonly href: string;
   readonly label: string;
   readonly icon: LucideIcon;
-  readonly badgeType?: 'pending' | 'confirmed';
+  readonly badgeType?: 'orders' | 'reservations';
 }
 
 const SideBar = () => {
   const pathname = usePathname()
   const { isOpen, toggle } = useStoreStatus()
-  const pendingCount = useTableCount('orders', 'pending')
-  const confirmedReservationsCount = useTableCount('reservations', 'confirmed')
+  const pendingOrdersCount = useTableCount('orders', 'pending')
+  const pendingReservationsCount = useTableCount('reservations', 'pending')
 
   const navItems: readonly NavItem[] = [
     {
       href: '/dashboard/live-orders',
       label: 'Live Orders',
       icon: ScrollText,
-      badgeType: 'pending',
+      badgeType: 'orders',
     },
     {
       href: '/dashboard/live-reservations',
       label: 'Live Reservations',
       icon: CalendarCheck,
-      badgeType: 'confirmed',
+      badgeType: 'reservations',
     },
     {
       href: '/dashboard/menu',
@@ -46,10 +46,10 @@ const SideBar = () => {
 
   const getBadgeCount = (badgeType?: string): number | null => {
     switch (badgeType) {
-      case 'pending':
-        return pendingCount;
-      case 'confirmed':
-        return confirmedReservationsCount;
+      case 'orders':
+        return pendingOrdersCount;
+      case 'reservations':
+        return pendingReservationsCount;
       default:
         return null;
     }
