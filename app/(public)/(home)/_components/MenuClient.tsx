@@ -101,11 +101,11 @@ export default function MenuClient({ items }: { items: Item[] }) {
 
       <div ref={beanRightRef} className="fixed bottom-[-60] right-0 w-50 h-50 md:w-75 md:h-75 pointer-events-none">
         <Image src="/coffee-beans-bottom-right.png" alt="right-beans"
-          fill loading="eager" className="object-contain" />
+          fill loading="eager" className="object-contain" sizes="10"  />
       </div>
       <div ref={beanLeftRef} className="fixed bottom-[-60] left-0 w-50 h-50 md:w-75 md:h-75 pointer-events-none">
         <Image src="/coffee-beans-bottom-left.png" alt="left-beans"
-          fill loading="eager" className="object-contain" />
+          fill loading="eager" className="object-contain" sizes="10" />
       </div>
     </main>
   )

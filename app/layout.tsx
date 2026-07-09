@@ -5,6 +5,8 @@ import CustomCursor from "./components/CustomCursor";
 import Navbar from "./components/Navbar";
 import NavigationObserver from "./components/NavigationObserver";
 import CartButton from "./components/CartButton";
+import ReservationPanel from "./components/ReservationPanel";
+
 
 const nunito = Nunito({
   subsets: ['latin'],
@@ -37,6 +39,7 @@ export default function RootLayout({
         <Navbar />
         <NavigationObserver />
         <CartButton />
+        <ReservationPanel />
         {children}
       </body>
     </html>

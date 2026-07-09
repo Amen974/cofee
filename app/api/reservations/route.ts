@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateSlots, getSeatsInUse } from '@/lib/availability'
+import { getSeatsInUse, isSlotValid } from '@/lib/availability'
 import { cookies } from 'next/headers'
 import { createClient } from '@/lib/supabase/server'
 
@@ -22,24 +22,15 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Could not load settings' }, { status: 500 })
 
   const { open_time, close_time, slot_interval, total_capacity,
-        session_duration_min, cleaning_buffer_min, max_party_size, timeZone, leadTimeMin } = settings
+        session_duration_min, cleaning_buffer_min, max_party_size, timezone, lead_time_min } = settings
 
   if (party_size > max_party_size)
     return NextResponse.json({ error: `Max party size is ${max_party_size}` }, { status: 400 })
 
   const blockDuration = session_duration_min + cleaning_buffer_min
 
-  const validSlots = generateSlots(
-    open_time,
-    close_time,
-    slot_interval,
-    blockDuration,
-    timeZone,
-    leadTimeMin,
-    date,
-  )
-  if (!validSlots.includes(start_time))
-    return NextResponse.json({ error: 'Invalid time slot' }, { status: 400 })
+  if (!isSlotValid(start_time, open_time, close_time, slot_interval, blockDuration, timezone, lead_time_min, date))
+  return NextResponse.json({ error: 'Invalid time slot' }, { status: 400 })
 
   const { data: reservations, error: rErr } = await supabase
     .from('reservations')

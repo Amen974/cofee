@@ -7,6 +7,7 @@ import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
 import { logout } from "../login/actions";
 import { useCartIndicator } from "@/lib/store/useCartIndicator";
+import { useReservationPanel } from "@/lib/store/useReservationPanel";
 
 interface NavItem {
   label: string;
@@ -16,7 +17,6 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'HOME', href: '/' },
   { label: 'MENU', href: '/menu' },
-  { label: 'RESERVATION', href: '/reservation' },
   { label: 'CONTACT', href: '/contact' },
 ];
 
@@ -24,6 +24,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuLinksRef = useRef<HTMLDivElement>(null)
   const { setCartState, reset } = useCartIndicator()
+  const { open } = useReservationPanel()
 
   const toggleMenu = (): void => setIsOpen(!isOpen);
   const closeMenu = (): void => setIsOpen(false);
@@ -116,13 +117,13 @@ const Navbar = () => {
           </NavLink>
         )}
 
-        <NavLink
-          href="/reservation"
+        <button
+          onClick={open}
           data-cursor-hover
           className="text-[10px] md:hidden lg:block tracking-[0.25em] text-[#E8E0D8] border border-[#7C1515] px-5 py-2.5 rounded-sm hover:bg-[#7C1515] transition-all duration-300 ease-out"
         >
           RESERVE A TABLE
-        </NavLink>
+        </button>
       </div>
       <button
         onClick={toggleMenu}
@@ -209,6 +210,16 @@ const Navbar = () => {
               <span>ONLY WORKERS</span>
             </NavLink>
           )}
+
+          <button
+            onClick={() => {
+              closeMenu()
+              open()
+            }}
+            className="w-full py-4 bg-[#7C1515] hover:bg-[#A32D1C] flex items-center justify-center space-x-3 text-xs tracking-[0.2em] text-[#E8E0D8] transition-colors rounded-sm"
+          >
+            <span>RESERVE A TABLE</span>
+          </button>
         </div>
       </div>
 

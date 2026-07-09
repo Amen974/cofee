@@ -64,3 +64,39 @@ export function getSeatsInUse(
     return sum
   }, 0)
 }
+
+export function isSlotValid(
+  start_time: string,
+  openTime: string,
+  closeTime: string,
+  intervalMin: number,
+  blockDurationMin: number,
+  timeZone: string,
+  leadTimeMin: number,
+  reservationDate: string,
+): boolean {
+  const [openH, openM] = openTime.split(':').map(Number)
+  const [closeH, closeM] = closeTime.split(':').map(Number)
+  const [slotH, slotM] = start_time.split(':').map(Number)
+
+  const openMinutes = openH * 60 + openM
+  const closeMinutes = closeH * 60 + closeM
+  const slotMinutes = slotH * 60 + slotM
+
+  // basic range + interval alignment (relative to open, matches generateSlots)
+  if (slotMinutes < openMinutes) return false
+  if (slotMinutes + blockDurationMin > closeMinutes) return false
+  if ((slotMinutes - openMinutes) % intervalMin !== 0) return false
+
+  const nowInZone = new Date(new Date().toLocaleString('en-US', { timeZone }))
+  const todayIso = `${nowInZone.getFullYear().toString().padStart(4, '0')}-${(nowInZone.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}-${nowInZone.getDate().toString().padStart(2, '0')}`
+
+  if (reservationDate === todayIso) {
+    const currentMinutes = nowInZone.getHours() * 60 + nowInZone.getMinutes() + leadTimeMin
+    if (slotMinutes < currentMinutes) return false
+  }
+
+  return true
+}

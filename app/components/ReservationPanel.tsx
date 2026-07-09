@@ -15,7 +15,7 @@ const isValidSettings = (settings: ReservationSettings): boolean =>
   settings.lead_time_min >= 0 &&
   settings.timezone.length > 0
 
-export default async function Page() {
+export default async function ReservationPanel() {
   const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
 
