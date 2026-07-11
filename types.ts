@@ -184,3 +184,5 @@ export type CartState =
   | 'Deleting'
   | 'Uploading'
   | 'Canceling'
+
+export type Corner = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right'
