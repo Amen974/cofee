@@ -1,21 +1,12 @@
 'use client'
 
 import { useRef } from "react"
-import { ArrowRight, Coffee, Gem, Star, Leaf } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import NavLink from "@/app/components/NavLink"
 
 gsap.registerPlugin(useGSAP)
-
-type HeroStat = Readonly<{ value: string; label: string; icon: React.ElementType }>
-
-const heroStats: readonly HeroStat[] = [
-  { value: "99.4 / 100", label: "EXCEPTIONAL CLASS", icon: Gem },
-  { value: "24/7", label: "BREWED FOR EVERY MOMENT", icon: Coffee },
-  { value: "100% ARABICA", label: "SMOOTH AND BALANCED", icon: Star },
-  { value: "LOCALLY SOURCED", label: "FRESH FROM FARM TO CUP", icon: Leaf },
-]
 
 const Hero = () => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -42,18 +33,6 @@ const Hero = () => {
         { autoAlpha: 0, y: 15 },
         { autoAlpha: 1, y: 0, duration: 0.8, stagger: 0.15 },
         "-=0.9"
-      )
-      .fromTo(
-        ".hero-tagline",
-        { autoAlpha: 0, y: 10 },
-        { autoAlpha: 1, y: 0, duration: 0.7 },
-        "-=0.4"
-      )
-      .fromTo(
-        ".hero-stat",
-        { autoAlpha: 0, y: 20 },
-        { autoAlpha: 1, y: 0, duration: 0.6, stagger: 0.1 },
-        "-=0.3"
       )
       .call(() => {
         mm.add("(min-width: 768px)", () => {
@@ -108,32 +87,6 @@ const Hero = () => {
         >
           Explore Our Menu <ArrowRight size={12} className="ml-4" />
         </NavLink>
-      </div>
-
-      <p className="hero-tagline text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#8D7E73] mb-10 flex gap-2 justify-center md:justify-start">
-        <span ref={dotRef} className="rounded-full border border-[#9a2d1e]/70 flex items-center justify-center w-4 h-4">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#9a2d1e]" />
-        </span>
-        The evening awaits.
-      </p>
-
-      <div className='flex flex-col md:flex-row gap-4 w-full p-4'>
-        {heroStats.map((stat) => {
-          const Icon = stat.icon
-          return (
-            <div key={stat.label} className='hero-stat flex-1 flex items-center'>
-              <Icon className="w-5 h-5 text-[#9a2d1e] mr-2.5" />
-              <div className="flex flex-col">
-                <span className="text-[0.625rem] tracking-[0.25em] text-white uppercase font-semibold">
-                  {stat.value}
-                </span>
-                <span className="text-[0.625rem] tracking-[0.2em] text-[#8D7E73] uppercase mt-1">
-                  {stat.label}
-                </span>
-              </div>
-            </div>
-          )
-        })}
       </div>
 
       <div className="absolute hidden p-7 right-0 top-35 md:block">

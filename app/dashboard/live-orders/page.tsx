@@ -73,7 +73,7 @@ export default function LiveOrdersPage() {
           {filteredOrders.map(o => (
             <div
               key={o.id}
-              className="bg-[#211c19] border border-[#8D7E73]/20 rounded-xl p-4 flex flex-col gap-3 hover:border-[#8D7E73]/40 transition-colors duration-150"
+              className="rounded-3xl border-3 border-[#2A1F1C] bg-[#141110] p-4 flex flex-col gap-3 hover:border-[#8D7E73]/40 transition-colors duration-150"
             >
               <div className="flex items-start justify-between gap-2">
                 <h2 className="text-white text-lg font-medium leading-tight truncate">{o.customer_name}</h2>

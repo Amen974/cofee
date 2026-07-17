@@ -62,7 +62,7 @@ export default function SettingsPage() {
     <div className="p-6 text-[#8D7E73] flex flex-col items-center">
       <h1 className="text-3xl text-[#A32D1C] mb-6">Restaurant Settings</h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl bg-[#211c19] border border-[#8D7E73]/20 rounded-2xl p-6 flex flex-col gap-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="max-w-2xl rounded-3xl border-3 border-[#2A1F1C] bg-[#141110] p-6 flex flex-col gap-4">
         <div className="grid gap-4 md:grid-cols-2">
           <label className={labelClasses}>
             Open time

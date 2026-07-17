@@ -76,7 +76,7 @@ const Page = () => {
             </div>
 
             <div className="lg:w-88">
-              <div className="lg:sticky lg:top-1/2 lg:transform lg:-translate-y-1/2 border border-[#8D7E73]/20 bg-[#211c19] p-6 md:p-7 flex flex-col gap-5">
+              <div className="lg:sticky lg:top-1/2 lg:transform lg:-translate-y-1/2 rounded-3xl border-3 border-[#2A1F1C] bg-[#141110] p-6 md:p-7 flex flex-col gap-5">
                 <h2 className="text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#A32D1C] font-semibold">
                   Order Summary
                 </h2>

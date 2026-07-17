@@ -3,6 +3,8 @@ import { cookies } from "next/headers";
 import BestSellers from "./_components/BestSellers";
 import Hero from "./_components/Hero";
 import { Item } from "@/types";
+import ReviewStack from "./_components/Reviewstack";
+import Footer from "./_components/Footer";
 
 
 export default async function Home() {
@@ -19,6 +21,8 @@ export default async function Home() {
     <main>
       <Hero />
       <BestSellers items={items ?? []} />
+      <ReviewStack />
+      <Footer />
     </main>
   );
 }

@@ -98,7 +98,7 @@ export default function LiveReservationsPage() {
           {filteredReservations.map((reservation) => (
             <div
               key={reservation.id}
-              className="bg-[#211c19] border border-[#8D7E73]/20 rounded-xl p-4 flex flex-col gap-3 hover:border-[#8D7E73]/40 transition-colors duration-150"
+              className="rounded-3xl border-3 border-[#2A1F1C] bg-[#141110] p-4 flex flex-col gap-3 hover:border-[#8D7E73]/40 transition-colors duration-150"
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">

@@ -30,7 +30,7 @@ const Page = (): JSX.Element => {
 
   return (
     <form ref={containerRef} onSubmit={handleSubmit} className='flex justify-center items-center text-[#8D7E73] py-1 px-4'>
-      <div className='checkout-fade-in border border-[#8D7E73]/25 flex flex-col gap-5 rounded-xs w-[90vw] max-w-130 p-7 bg-[#161311] shadow-2xl shadow-black/40'>
+      <div className='checkout-fade-in flex flex-col gap-5 w-[90vw] max-w-130 p-7 rounded-3xl border-3 border-[#2A1F1C] bg-[#141110] shadow-2xl shadow-black/40'>
         <h1 className='text-[#A32D1C] text-3xl'>Your Details</h1>
 
         {submitState.error && (

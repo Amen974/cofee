@@ -34,7 +34,7 @@ export default function CartButton() {
   return (
     <div
       ref={elRef}
-      className='z-50 rounded-full border-3 border-[#1b1b1b] p-3 text-white cursor-pointer flex justify-center items-center w-11 h-11 bg-[#0E0D0B]'
+      className='z-50 rounded-full border-3 border-[#1b1b1b] p-3 text-white cursor-pointer flex justify-center items-center w-11 h-11 bg-[#0E0D0B] hover:scale-95 touch-none '
       style={positionStyle}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
