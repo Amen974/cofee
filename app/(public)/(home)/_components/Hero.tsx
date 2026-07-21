@@ -1,5 +1,5 @@
 'use client'
-import { CoffeeBeanIcon , CoffeeIcon , MapPinIcon , ArrowRightIcon  } from "@phosphor-icons/react"
+import { CoffeeBeanIcon, CoffeeIcon, MapPinIcon, ArrowRightIcon } from "@phosphor-icons/react"
 import NavLink from "@/app/components/NavLink"
 import { useRef } from "react"
 import gsap from "gsap"
@@ -15,13 +15,13 @@ const features = [
   },
   {
     icon: CoffeeIcon,
-    title: "Exceptional Brews",
-    desc: "Made with precision",
+    title: "Premium",
+    desc: "Crafted daily",
   },
   {
     icon: MapPinIcon,
-    title: "Warm Atmosphere",
-    desc: "Designed for moments",
+    title: "Cozy",
+    desc: "Feel at home",
   },
 ]
 
@@ -32,8 +32,8 @@ const Hero = () => {
     const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
 
     tl.fromTo('.hero-title',
-        { autoAlpha: 0, y: 60 },
-        { autoAlpha: 1, y: 0, duration: 1.2 })
+      { autoAlpha: 0, y: 60 },
+      { autoAlpha: 1, y: 0, duration: 1.2 })
       .fromTo('.reveal-line',
         { yPercent: 100 },
         { yPercent: 0, duration: 1, stagger: 0.1 },
@@ -89,11 +89,11 @@ const Hero = () => {
         </NavLink>
       </div>
 
-      <div className="grid grid-cols-3  max-w-xl mt-30 md:mt-0">
+      <div className="grid grid-cols-3 max-w-xl mt-30 md:mt-0">
         {features.map(({ icon: Icon, title, desc }) => (
-          <div key={title} className="hero-feature flex flex-col md:flex-row items-center gap-2">
+          <div key={title} className="hero-feature flex flex-col justify-center md:justify-start md:flex-row items-center gap-2">
             <Icon size={22} className="text-[#e9b28b]" weight="thin" />
-            <div>
+            <div className='flex flex-col justify-center items-center md:justify-start md:items-start'>
               <p className="uppercase text-[0.625rem] md:text-xs tracking-[0.15em] text-[#ddd1c7]">
                 {title}
               </p>

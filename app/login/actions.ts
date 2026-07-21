@@ -15,7 +15,7 @@ export async function login(formData: FormData) {
     password: formData.get("password") as string,
   })
 
-  if (error) redirect("/login?error=Invalid%20credentials")
+  if (error) redirect(error.message)
   redirect("/dashboard/live-orders")
 }
 
