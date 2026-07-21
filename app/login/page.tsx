@@ -3,7 +3,7 @@
 import { useRef } from "react"
 import { useGSAP } from "@gsap/react"
 import gsap from "gsap"
-import { Lock } from "lucide-react"
+import { LockIcon  } from "@phosphor-icons/react"
 import Image from "next/image"
 import { login } from "./actions"
 import { useCartIndicator } from "@/lib/store/useCartIndicator"
@@ -51,7 +51,7 @@ export default function Page() {
   return (
     <main
       ref={containerRef}
-      className="relative flex h-[70vh] w-full flex-col items-center justify-center overflow-hidden px-6 text-[#8D7E73]"
+      className="relative flex h-[70vh] w-full flex-col items-center justify-center overflow-hidden px-6 text-[#8D7E73] mt-20"
     >
       <div
         ref={beanRef}
@@ -85,7 +85,7 @@ export default function Page() {
           className="flex w-full flex-col gap-4"
         >
           <div className="login-field relative w-full">
-            <Lock
+            <LockIcon
               size={14}
               className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8D7E73]"
             />

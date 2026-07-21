@@ -1,6 +1,6 @@
 'use client'
 
-import { Clock, Phone, Users } from 'lucide-react'
+import { ClockIcon, PhoneIcon, UserIcon  } from '@phosphor-icons/react'
 import { ReservationFilter, useReservations } from './useReservations'
 
 const statusLabels: Record<ReservationFilter, string> = {
@@ -41,7 +41,7 @@ export default function LiveReservationsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64 text-[#8D7E73] gap-2 text-xs tracking-[0.2em] uppercase">
-        <Users className="animate-pulse w-6 h-6" />
+        <UserIcon className="animate-pulse w-6 h-6" />
         Loading reservations...
       </div>
     )
@@ -50,7 +50,7 @@ export default function LiveReservationsPage() {
   if (!reservations.length) {
     return (
       <div className="flex flex-col items-center justify-center h-64 text-[#8D7E73] gap-2">
-        <Users className="w-10 h-10 opacity-30" />
+        <UserIcon className="w-10 h-10 opacity-30" />
         <p className="text-xs tracking-[0.2em] uppercase">No reservations yet</p>
       </div>
     )
@@ -115,18 +115,18 @@ export default function LiveReservationsPage() {
 
               <div className="flex items-center gap-4 text-sm">
                 <span className="flex items-center gap-1.5">
-                  <Phone className="w-3.5 h-3.5 shrink-0" />
+                  <PhoneIcon className="w-3.5 h-3.5 shrink-0" />
                   {reservation.guest_phone}
                 </span>
                 <span className="flex items-center gap-1.5">
-                  <Users className="w-3.5 h-3.5 shrink-0" />
+                  <UserIcon className="w-3.5 h-3.5 shrink-0" />
                   {reservation.party_size}
                 </span>
               </div>
 
               <div className="flex items-center justify-between text-xs text-[#8D7E73]/60 pt-1">
                 <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
+                  <ClockIcon className="w-3 h-3" />
                   {timeAgo(reservation.created_at)}
                 </span>
               </div>

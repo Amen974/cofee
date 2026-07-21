@@ -1,7 +1,7 @@
 "use client"
 import { useState, useRef } from "react"
 import Image from "next/image"
-import { Minus, Plus } from "lucide-react"
+import { MinusIcon, PlusIcon } from "@phosphor-icons/react"
 import { Item } from "@/types"
 import { usecart } from "@/lib/store/useCart"
 import { useCartIndicator } from "@/lib/store/useCartIndicator"
@@ -61,7 +61,7 @@ export default function MenuItemCard({ item }: { item: Item }) {
             aria-label="Decrease quantity"
             className="flex h-8 w-8 items-center justify-center text-[#8D7E73] transition-colors duration-300 hover:text-[#A32D1C] disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Minus size={12} />
+            <MinusIcon size={12} />
           </button>
 
           <input
@@ -80,7 +80,7 @@ export default function MenuItemCard({ item }: { item: Item }) {
             aria-label="Increase quantity"
             className="flex h-8 w-8 items-center justify-center text-[#8D7E73] transition-colors duration-300 hover:text-[#A32D1C] disabled:cursor-not-allowed disabled:opacity-40"
           >
-            <Plus size={12} />
+            <PlusIcon size={12} />
           </button>
         </div>
 

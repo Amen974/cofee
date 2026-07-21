@@ -34,7 +34,7 @@ export default function RootLayout({
       lang="en"
       className={`${nunito.variable} ${dancing.variable} h-full antialiased`}
     >
-      <body className="bg-[#0E0D0B]">
+      <body>
         <CustomCursor />
         <Navbar />
         <NavigationObserver />

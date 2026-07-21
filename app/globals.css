@@ -4,6 +4,7 @@
   body {
     scroll-behavior: smooth;
     font-family: var(--font-cinzel), sans-serif;
+    background: #0E0D0B;
   }
 
   h1, h2, h3 {
@@ -48,4 +49,18 @@ input[type="number"] {
 
 .scroll-bar-non {
   scrollbar-width: none;
+}
+
+.hero-bg{
+  background-image: url('/hero_bg.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: right;
+}
+ 
+@media (max-width: 767px) {
+  .hero-bg{
+    background-image: url('/hero_bg_mobile.png');
+    background-size: cover;
+  }
 }

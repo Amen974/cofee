@@ -1,6 +1,6 @@
 'use client'
 import { Filter, useOrders } from "./useOrders"
-import { Phone, Clock, ShoppingBag, MapPin } from 'lucide-react'
+import { PhoneIcon, ClockIcon, ShoppingBagIcon , MapPinIcon  } from '@phosphor-icons/react'
 
 const statusStyles: Record<string, string> = {
   pending: 'bg-yellow-500/10 text-yellow-500 border border-yellow-500/30',
@@ -19,14 +19,14 @@ export default function LiveOrdersPage() {
 
   if (loading) return (
     <div className="flex items-center justify-center h-64 text-[#8D7E73] gap-2 text-xs tracking-[0.2em] uppercase">
-      <ShoppingBag className="animate-pulse w-6 h-6" />
+      <ShoppingBagIcon className="animate-pulse w-6 h-6" />
       Loading orders...
     </div>
   )
 
   if (!orders.length) return (
     <div className="flex flex-col items-center justify-center h-64 text-[#8D7E73] gap-2">
-      <ShoppingBag className="w-10 h-10 opacity-30" />
+      <ShoppingBagIcon className="w-10 h-10 opacity-30" />
       <p className="text-xs tracking-[0.2em] uppercase">No orders yet</p>
     </div>
   )
@@ -84,7 +84,7 @@ export default function LiveOrdersPage() {
               </div>
 
               <div className="flex items-center gap-1.5 text-sm">
-                <Phone className="w-3.5 h-3.5 shrink-0" />
+                <PhoneIcon className="w-3.5 h-3.5 shrink-0" />
                 {o.phone}
               </div>
 
@@ -93,7 +93,7 @@ export default function LiveOrdersPage() {
                   onClick={() => navigator.clipboard.writeText(`${o.lat},${o.lng}`)}
                   className="flex items-center gap-1.5 px-3 py-2 bg-[#1b1816] border border-[#8D7E73]/30 rounded-md text-xs tracking-wide text-[#8D7E73] hover:text-[#A32D1C] hover:border-[#A32D1C]/40 transition-colors duration-150 cursor-pointer"
                 >
-                  <MapPin className="w-3.5 h-3.5 shrink-0" />
+                  <MapPinIcon className="w-3.5 h-3.5 shrink-0" />
                   Copy Location
                 </button>
               )}
@@ -128,7 +128,7 @@ export default function LiveOrdersPage() {
 
               <div className="flex items-center justify-between">
                 <span className="flex items-center gap-1 text-xs text-[#8D7E73]/60">
-                  <Clock className="w-3 h-3" />
+                  <ClockIcon className="w-3 h-3" />
                   {timeAgo(o.created_at)}
                 </span>
                 <span className="text-[#A32D1C] font-medium text-sm tracking-wide">

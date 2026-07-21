@@ -4,7 +4,7 @@ import { usecart } from '@/lib/store/useCart'
 import CartItem from '../_components/CartItem'
 import { useEffect, useRef, useState } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { ArrowRight, PackageOpen } from 'lucide-react'
+import { ArrowRightIcon, ShoppingBagOpenIcon } from '@phosphor-icons/react'
 import NavLink from '@/app/components/NavLink'
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
@@ -54,10 +54,10 @@ const Page = () => {
   const isEmpty = items.length === 0
 
   return (
-    <div ref={containerRef} className="py-10 px-4 md:px-10 lg:px-16 text-[#8D7E73]">
+    <div ref={containerRef} className="px-4 md:px-10 lg:px-16 text-[#8D7E73]">
       {isEmpty ? (
-        <div className="cart-fade-in h-[70vh] flex flex-col items-center justify-center py-32 gap-4">
-          <PackageOpen size={56} strokeWidth={1} className="text-[#8D7E73]/40" />
+        <div className="cart-fade-in min-h-screen flex flex-col items-center justify-center py-32 gap-4">
+          <ShoppingBagOpenIcon size={56} strokeWidth={1} className="text-[#8D7E73]/40" />
           <p className="text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#8D7E73]/60">
             Your cart is empty
           </p>
@@ -70,12 +70,12 @@ const Page = () => {
         </div>
       ) : (
         <div className="cart-fade-in max-w-6xl mx-auto">
-          <div className="w-full flex flex-col lg:flex-row gap-10 lg:gap-16 min-h-[75vh]">
+          <div className="w-full flex flex-col lg:flex-row lg:gap-16 min-h-screen">
             <div className="flex-1 flex items-center">
               <CartItem items={items} />
             </div>
 
-            <div className="lg:w-88">
+            <div className="lg:w-88 mb-5">
               <div className="lg:sticky lg:top-1/2 lg:transform lg:-translate-y-1/2 rounded-3xl border-3 border-[#2A1F1C] bg-[#141110] p-6 md:p-7 flex flex-col gap-5">
                 <h2 className="text-[0.625rem] md:text-xs tracking-[0.25em] uppercase text-[#A32D1C] font-semibold">
                   Order Summary
@@ -111,7 +111,7 @@ const Page = () => {
                   className="w-full h-11 bg-[#9a2d1e] hover:bg-[#8d2414] active:scale-95 transition-all duration-300 text-white text-[0.625rem] tracking-[0.25em] uppercase rounded-xs flex items-center justify-center gap-2 cursor-pointer"
                 >
                   Continue with order
-                  <ArrowRight size={14} />
+                  <ArrowRightIcon size={14} />
                 </NavLink>
               </div>
             </div>

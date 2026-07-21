@@ -2,7 +2,7 @@
 
 import { useCheckout } from './useCheckout'
 import { JSX, useRef } from 'react'
-import { ArrowRight, MapPin } from 'lucide-react'
+import { ArrowRightIcon, MapPin } from '@phosphor-icons/react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 
@@ -29,7 +29,7 @@ const Page = (): JSX.Element => {
   }, { scope: containerRef })
 
   return (
-    <form ref={containerRef} onSubmit={handleSubmit} className='flex justify-center items-center text-[#8D7E73] py-1 px-4'>
+    <form ref={containerRef} onSubmit={handleSubmit} className='flex justify-center items-center text-[#8D7E73] py-1 px-4 mt-20'>
       <div className='checkout-fade-in flex flex-col gap-5 w-[90vw] max-w-130 p-7 rounded-3xl border-3 border-[#2A1F1C] bg-[#141110] shadow-2xl shadow-black/40'>
         <h1 className='text-[#A32D1C] text-3xl'>Your Details</h1>
 
@@ -105,7 +105,7 @@ const Page = (): JSX.Element => {
           className="w-full h-11 bg-[#9a2d1e] hover:bg-[#8d2414] transition-all duration-300 text-white text-[0.625rem] tracking-[0.25em] uppercase rounded-xs flex items-center justify-center gap-2 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
           Place order
-          <ArrowRight size={14} />
+          <ArrowRightIcon size={14} />
         </button>
       </div>
     </form>

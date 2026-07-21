@@ -1,7 +1,7 @@
 "use client"
 
 import { useRef, useState } from "react"
-import { Search } from "lucide-react"
+import { MagnifyingGlassIcon } from "@phosphor-icons/react"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import MenuItemCard from "./MenuItemCard"
@@ -53,7 +53,7 @@ export default function MenuClient({ items }: { items: Item[] }) {
   }, { scope: containerRef, dependencies: [search], revertOnUpdate: true })
 
   return (
-    <main ref={containerRef} className="text-[#8D7E73] relative pb-15">
+    <main ref={containerRef} className="text-[#8D7E73] relative pb-15 mt-20">
       <div className="text-center mb-10 md:mb-14">
         <h1 className="menu-title text-[clamp(2rem,12vw,6rem)] text-[#A32D1C]">
           The Menu
@@ -70,7 +70,7 @@ export default function MenuClient({ items }: { items: Item[] }) {
 
         <div className="menu-search mt-5 flex justify-center">
           <div className="relative w-[80vw] md:w-[40vw]">
-            <Search
+            <MagnifyingGlassIcon
               size={14}
               className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-[#8D7E73]"
             />

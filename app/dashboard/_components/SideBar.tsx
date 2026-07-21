@@ -1,6 +1,6 @@
 'use client'
 
-import { ScrollText, CalendarCheck, BookOpen, LucideIcon, Settings } from "lucide-react";
+import { ScrollIcon, CalendarCheckIcon, BookOpenIcon, GearIcon, type Icon } from "@phosphor-icons/react";
 import { usePathname } from "next/navigation";
 import { useStoreStatus } from "@/lib/hooks/useStoreStatus";
 import { useTableCount } from "@/lib/hooks/useTableCount";
@@ -9,7 +9,7 @@ import NavLink from "@/app/components/NavLink";
 interface NavItem {
   readonly href: string;
   readonly label: string;
-  readonly icon: LucideIcon;
+  readonly icon: Icon;
   readonly badgeType?: 'orders' | 'reservations';
 }
 
@@ -23,24 +23,24 @@ const SideBar = () => {
     {
       href: '/dashboard/live-orders',
       label: 'Live Orders',
-      icon: ScrollText,
+      icon: ScrollIcon,
       badgeType: 'orders',
     },
     {
       href: '/dashboard/live-reservations',
       label: 'Live Reservations',
-      icon: CalendarCheck,
+      icon: CalendarCheckIcon,
       badgeType: 'reservations',
     },
     {
       href: '/dashboard/menu',
       label: 'Menu',
-      icon: BookOpen,
+      icon: BookOpenIcon,
     },
     {
       href: '/dashboard/restaurant_settings',
       label: 'Restaurant Settings',
-      icon: Settings,
+      icon: GearIcon,
     },
   ];
 

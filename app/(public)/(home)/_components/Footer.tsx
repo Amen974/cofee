@@ -1,5 +1,6 @@
+'use client'
 import NavLink from "@/app/components/NavLink"
-import { FaInstagram, FaFacebookF } from "react-icons/fa"
+import { InstagramLogoIcon, FacebookLogoIcon } from "@phosphor-icons/react"
 
 interface FooterNavItem {
   label: string
@@ -15,13 +16,13 @@ const footerNavItems: FooterNavItem[] = [
 ]
 
 const socialLinks = [
-  { label: 'Instagram', href: 'https://instagram.com', icon: FaInstagram },
-  { label: 'Facebook', href: 'https://facebook.com', icon: FaFacebookF },
+  { label: 'Instagram', href: 'https://instagram.com', icon: InstagramLogoIcon },
+  { label: 'Facebook', href: 'https://facebook.com', icon: FacebookLogoIcon },
 ]
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0E0D0B] border-t border-[#2A1F1C]/60 px-6 md:px-12 pt-16 pb-8 text-[#8D7E73]">
+    <footer className="border-t border-[#2A1F1C]/60 px-6 md:px-12 pt-16 pb-8 text-[#8D7E73]">
       <div className="max-w-6xl mx-auto flex flex-col gap-14">
         <div className="flex flex-col md:flex-row md:justify-between gap-10">
           <div className="flex flex-col gap-3">

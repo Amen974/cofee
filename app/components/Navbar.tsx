@@ -53,7 +53,7 @@ const Navbar = () => {
 
 
   return (
-    <header className="sticky top-0 w-full bg-[#0E0D0B] z-40 flex items-center justify-between px-6 py-6 md:px-6 lg:px-12 md:py-6 border-b border-[#2A1F1C]/40">
+    <header className="fixed top-0 w-full z-40 flex items-center justify-between px-6 py-6 md:px-6 lg:px-12 md:py-6 border-b border-[#2A1F1C]/40">
       <NavLink href="/" className="flex flex-col group" data-cursor-hover>
         <span className="text-lg md:text-sm lg:text-xl tracking-[0.3em] text-[#8D7E73] group-hover:text-[#7C1515] transition-colors duration-300">
           OBSIDIAN

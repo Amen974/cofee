@@ -1,5 +1,5 @@
 'use client'
-import { ShoppingCart } from 'lucide-react'
+import { ShoppingCartSimpleIcon } from '@phosphor-icons/react'
 import { useCartIndicator } from '../../lib/store/useCartIndicator'
 import { useNavigationStore } from '@/lib/store/useNavigationStore'
 import NavLink from './NavLink'
@@ -45,7 +45,7 @@ export default function CartButton() {
         onDragStart={(e) => e.preventDefault()}
         className='p-3'
       >
-        <ShoppingCart className="w-4 h-4" />
+        <ShoppingCartSimpleIcon className="w-4 h-4" />
       </NavLink>
     </div>
   )
