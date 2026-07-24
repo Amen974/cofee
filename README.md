@@ -1,147 +1,119 @@
-create table public.menu_items (
-  id uuid not null default gen_random_uuid (),
-  name text not null,
-  description text null default ''::text,
-  price numeric(10, 2) not null,
-  image_url text null,
-  is_available boolean not null default true,
-  created_at timestamp with time zone null default now(),
-  quantity smallint not null default '1'::smallint,
-  constraint menu_items_pkey primary key (id)
-) TABLESPACE pg_default;
+# Obsidian Coffee Lounge
 
-create index IF not exists idx_menu_items_available on public.menu_items using btree (is_available) TABLESPACE pg_default;
+A full-stack coffee lounge platform: a public ordering/booking site for guests and a real-time operations dashboard for staff. Built to explore production patterns around role-based access, real-time data sync, and animation-heavy frontend work without sacrificing performance.
 
-create table public.orders (
-  id uuid not null default gen_random_uuid (),
-  created_at timestamp with time zone null default now(),
-  customer_name text not null,
-  phone text not null,
-  lat double precision null,
-  lng double precision null,
-  status text not null default 'pending'::text,
-  notes text null,
-  items jsonb not null,
-  total_price numeric(10, 2) not null default 0,
-  address text null default ''::text,
-  constraint orders_pkey primary key (id)
-) TABLESPACE pg_default;
+**Live demo:** https://cofee-cyan.vercel.app/
 
-create table public.profiles (
-  id uuid not null,
-  email text not null,
-  password text not null default ''::text,
-  constraint profiles_pkey primary key (id, password),
-  constraint profiles_id_fkey foreign KEY (id) references auth.users (id) on delete CASCADE
-) TABLESPACE pg_default;
+![alt text](<Screenshot 2026-07-24 140654.png>)
+![alt text](<Screenshot 2026-07-24 140752.png>) 
+![alt text](<Screenshot 2026-07-24 140807.png>)
 
-create table public.reservations (
-  id uuid not null default gen_random_uuid (),
-  reservation_date date not null,
-  start_time time without time zone not null,
-  end_time time without time zone not null,
-  party_size smallint not null,
-  guest_name text not null,
-  guest_phone text not null,
-  status text not null default 'pending'::text,
-  created_at timestamp with time zone null default now(),
-  constraint reservations_pkey primary key (id),
-  constraint reservations_status_check check (
-    (
-      status = any (
-        array[
-          'pending'::text,
-          'confirmed'::text,
-          'cancelled'::text,
-          'no_show'::text,
-          'completed'::text
-        ]
-      )
-    )
-  )
-) TABLESPACE pg_default;
+## Overview
 
-create index IF not exists idx_reservations_date_status on public.reservations using btree (reservation_date, status) TABLESPACE pg_default;
+Guests can browse the menu, order, and reserve a table with zero friction — no account required. Staff log into a single shared operator account to manage live orders, reservations, and the menu in real time. The two surfaces share a database but are fully separated by auth middleware and Postgres row-level security.
 
-create table public.restaurant_settings (
-  open_time time without time zone not null,
-  close_time time without time zone not null,
-  slot_interval integer not null,
-  total_capacity integer not null,
-  session_duration_min smallint null,
-  cleaning_buffer_min integer null,
-  max_party_size smallint not null default '10'::smallint,
-  isopen boolean not null default true,
-  tax_rate numeric(5, 2) not null default 0,
-  delivery_fee numeric(10, 2) not null default 0,
-  min_party_size smallint not null default '2'::smallint,
-  max_booking_days smallint not null default '30'::smallint,
-  id uuid not null default gen_random_uuid (),
-  lead_time_min smallint not null default 15,
-  timezone text not null default 'America/New_York'::text,
-  constraint restaurant_settings_pkey primary key (id)
-) TABLESPACE pg_default;
+| | |
+|---|---|
+| **Guest flow** | No login. Browse menu → cart → checkout (with GPS-based delivery location) → order confirmation. Same no-login model for table reservations. |
+| **Staff flow** | Single shared operator account. Realtime order/reservation feed, menu CRUD, and restaurant settings (hours, capacity, open/closed toggle) behind authenticated, middleware-protected routes. |
 
-📦app
- ┣ 📂(public)
- ┃ ┣ 📂(home)
- ┃ ┃ ┣ 📂cart
- ┃ ┃ ┃ ┣ 📂checkout
- ┃ ┃ ┃ ┃ ┣ 📜page.tsx
- ┃ ┃ ┃ ┃ ┗ 📜useCheckout.ts
- ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┣ 📂contact
- ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┣ 📂menu
- ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┣ 📂_components
- ┃ ┃ ┃ ┣ 📜BestSellers.tsx
- ┃ ┃ ┃ ┣ 📜CartItem.tsx
- ┃ ┃ ┃ ┣ 📜Footer.tsx
- ┃ ┃ ┃ ┣ 📜Hero.tsx
- ┃ ┃ ┃ ┣ 📜MenuClient.tsx
- ┃ ┃ ┃ ┣ 📜MenuItemCard.tsx
- ┃ ┃ ┃ ┗ 📜Reviewstack.tsx
- ┃ ┃ ┗ 📜page.tsx
- ┃ ┗ 📜layout.tsx
- ┣ 📂api
- ┃ ┣ 📂availability
- ┃ ┃ ┗ 📜route.ts
- ┃ ┗ 📂reservations
- ┃ ┃ ┗ 📜route.ts
- ┣ 📂components
- ┃ ┣ 📜BookingClient.tsx
- ┃ ┣ 📜cart-button-logic.ts
- ┃ ┣ 📜CartButton.tsx
- ┃ ┣ 📜CustomCursor.tsx
- ┃ ┣ 📜IsOpen.tsx
- ┃ ┣ 📜Navbar.tsx
- ┃ ┣ 📜NavigationObserver.tsx
- ┃ ┣ 📜NavLink.tsx
- ┃ ┣ 📜ReservationPanel.tsx
- ┃ ┗ 📜useBooking.ts
- ┣ 📂dashboard
- ┃ ┣ 📂live-orders
- ┃ ┃ ┣ 📜page.tsx
- ┃ ┃ ┗ 📜useOrders.ts
- ┃ ┣ 📂live-reservations
- ┃ ┃ ┣ 📜page.tsx
- ┃ ┃ ┗ 📜useReservations.ts
- ┃ ┣ 📂menu
- ┃ ┃ ┣ 📜actions.ts
- ┃ ┃ ┣ 📜AddMenuItem.tsx
- ┃ ┃ ┣ 📜MenuDashboardClient.tsx
- ┃ ┃ ┣ 📜MenuDashboardItemCard.tsx
- ┃ ┃ ┣ 📜MenuItemForm.tsx
- ┃ ┃ ┣ 📜page.tsx
- ┃ ┃ ┗ 📜useMenuItemForm.ts
- ┃ ┣ 📂restaurant_settings
- ┃ ┃ ┗ 📜page.tsx
- ┃ ┣ 📂_components
- ┃ ┃ ┗ 📜SideBar.tsx
- ┃ ┗ 📜layout.tsx
- ┣ 📂login
- ┃ ┣ 📜actions.ts
- ┃ ┗ 📜page.tsx
- ┣ 📜globals.css
- ┗ 📜layout.tsx
+## Why no per-worker accounts
+
+This is a deliberate constraint, not a limitation: a small café floor doesn't need per-employee auth overhead, and a single shared operator account matched the actual staffing model. Route protection is still layered properly — Next.js middleware guards `/dashboard/*` at the edge, and Supabase RLS enforces the same boundary at the database level, so the access control isn't dependent on a single layer.
+
+## Features
+
+**Public site**
+- Menu browsing with live search/filter
+- Cart with persisted state across sessions (Zustand + `persist`)
+- Checkout with GPS-based address capture
+- Table reservation with real-time slot availability (respects restaurant hours, lead time, party size limits, and booking window from admin-configured settings)
+- Scroll-driven animated storefront (hero, best sellers, testimonials) built with GSAP
+
+**Staff dashboard**
+- Live order feed via Supabase Realtime — no polling
+- Order status management (accept, modify, remove line items)
+- Reservation management
+- Menu item CRUD with image upload to Supabase Storage
+- Restaurant settings: hours, table capacity, open/closed status — reflected live on the public site
+- Scheduled cleanup (`pg_cron`) auto-purges stale non-pending orders/reservations after 3 days
+
+## Architecture notes
+
+A few decisions worth calling out over "yet another CRUD app":
+
+- **Defense in depth on auth.** Middleware (`proxy.ts`) blocks unauthenticated access to `/dashboard/*` at the routing layer; Postgres RLS policies enforce the same rule independently at the data layer. Either one failing doesn't expose the other.
+- **Server-trusted business rules.** Reservation capacity and time-slot math (`lead_time_min`, `session_duration_min`, `cleaning_buffer_min`) are always fetched server-side at write time — never trusted from the client request body, since the client can lie about the current time or capacity.
+- **Zustand scoped to client state only.** Cart contents and UI state live in Zustand; anything backed by the database (orders, reservations, menu) flows through Supabase directly. This keeps the store from becoming a second, stale source of truth.
+- **Server component → client component → hook split.** Server components fetch and pass data down; client components own interaction; custom hooks own state logic. Keeps data-fetching out of `'use client'` boundaries.
+- **Animation state stays out of React.** GSAP owns positional styles on any element it animates — React state doesn't write to the same CSS properties concurrently, which avoids the fight-over-the-DOM-node bugs common when animation libraries and React re-renders touch the same element.
+
+## Tech stack
+
+| Layer | Choice |
+|---|---|
+| Framework | Next.js (App Router), TypeScript |
+| Styling | Tailwind CSS |
+| Animation | GSAP + `@gsap/react` (`useGSAP`, `ScrollTrigger`) |
+| Client state | Zustand |
+| Backend | Supabase (PostgreSQL, Storage, Realtime, Auth, `pg_cron`) |
+| Forms | React Hook Form |
+| Icons | Phosphor Icons |
+| Deployment | Vercel |
+
+## Data model
+
+Five tables: `menu_items`, `orders`, `reservations`, `restaurant_settings`, and `profiles` (auth linkage for the single operator account). Reservations use a status check constraint (`confirmed` / `cancelled` / `no_show` / `completed`); capacity checks filter on `status IN ('pending', 'confirmed')` to prevent double-booking. All time-based settings (`lead_time_min`, `session_duration_min`, `cleaning_buffer_min`) are stored in minutes for consistent arithmetic.
+
+Full schema: [`supabase/schema.sql`](./supabase/schema.sql)
+
+## Project structure
+
+```
+app/
+├─ (public)/
+│  ├─ (home)/
+│  │  ├─ cart/checkout/       # checkout flow + hook
+│  │  ├─ menu/                # menu page
+│  │  ├─ reservation/         # booking UI + hook
+│  │  └─ _components/         # Hero, BestSellers, MenuClient, etc.
+│  └─ layout.tsx
+├─ api/
+│  ├─ availability/           # reservation slot availability
+│  └─ reservations/
+├─ components/                # Navbar, CartButton, CustomCursor, etc.
+├─ dashboard/
+│  ├─ live-orders/
+│  ├─ live-reservations/
+│  ├─ menu/                   # CRUD + image upload
+│  ├─ restaurant_settings/
+│  └─ _components/
+└─ login/
+```
+
+## Running locally
+
+```bash
+git clone https://github.com/<your-username>/<repo>.git
+cd <repo>
+npm install
+```
+
+Create `.env.local`:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
+email=                # operator login email
+```
+
+Run the schema in `supabase/schema.sql` against a fresh Supabase project, then:
+
+```bash
+npm run dev
+```
+
+## What I'd do differently
+
+- Move the operator email out of a raw env var lookup and into Supabase's own user metadata, to remove one manual config step.
+- Add optimistic UI updates on the dashboard order list ahead of the Realtime event arriving, to hide network latency on slower connections.
