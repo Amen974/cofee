@@ -1,6 +1,6 @@
 'use client'
 import NavLink from "@/app/components/NavLink"
-import { InstagramLogoIcon, FacebookLogoIcon } from "@phosphor-icons/react"
+import { InstagramLogoIcon, FacebookLogoIcon, ArrowUpRightIcon } from "@phosphor-icons/react"
 
 interface FooterNavItem {
   label: string
@@ -81,19 +81,34 @@ const Footer = () => {
           </div>
         </div>
 
+        {/* Made-by callout: separated from the copyright line and styled as its own
+            bordered block so it reads as a distinct, clickable element rather than
+            fine print. */}
+        <a
+          href="https://portfolio-delta-eight-29.vercel.app/"
+          data-cursor-hover
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center justify-between gap-4 rounded-lg border border-[#2A1F1C] px-6 py-4 hover:border-[#A32D1C] hover:bg-[#2A1F1C]/20 transition-colors duration-300"
+        >
+          <span className="flex items-baseline gap-2 flex-wrap">
+            <span className="text-[10px] tracking-[0.2em] uppercase text-[#6B6360]">
+              Site crafted by
+            </span>
+            <span className="text-sm tracking-widest text-[#E8E0D8] font-serif group-hover:text-[#A32D1C] transition-colors duration-300">
+              AMEN ALLAH ARFAOUI
+            </span>
+          </span>
+          <ArrowUpRightIcon
+            size={16}
+            className="text-[#8D7E73] group-hover:text-[#A32D1C] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 shrink-0"
+          />
+        </a>
+
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-6 border-t border-[#2A1F1C]/40">
           <span className="text-[10px] tracking-[0.15em] text-[#6B6360] uppercase">
             © {new Date().getFullYear()} Obsidian Coffee Lounge. All rights reserved.
           </span>
-          <a
-            href="https://your-personal-site.com"
-            data-cursor-hover
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[10px] tracking-[0.15em] text-[#6B6360] hover:text-[#E8E0D8] uppercase transition-colors duration-300"
-          >
-            Made by AMEN ALLAH ARFAOUI
-          </a>
         </div>
       </div>
     </footer>

@@ -43,13 +43,14 @@ create table public.reservations (
   party_size smallint not null,
   guest_name text not null,
   guest_phone text not null,
-  status text not null default 'confirmed'::text,
+  status text not null default 'pending'::text,
   created_at timestamp with time zone null default now(),
   constraint reservations_pkey primary key (id),
   constraint reservations_status_check check (
     (
       status = any (
         array[
+          'pending'::text,
           'confirmed'::text,
           'cancelled'::text,
           'no_show'::text,
@@ -89,18 +90,18 @@ create table public.restaurant_settings (
  ┃ ┃ ┃ ┃ ┣ 📜page.tsx
  ┃ ┃ ┃ ┃ ┗ 📜useCheckout.ts
  ┃ ┃ ┃ ┗ 📜page.tsx
+ ┃ ┃ ┣ 📂contact
+ ┃ ┃ ┃ ┗ 📜page.tsx
  ┃ ┃ ┣ 📂menu
  ┃ ┃ ┃ ┗ 📜page.tsx
- ┃ ┃ ┣ 📂reservation
- ┃ ┃ ┃ ┣ 📜BookingClient.tsx
- ┃ ┃ ┃ ┣ 📜page.tsx
- ┃ ┃ ┃ ┗ 📜useBooking.ts
  ┃ ┃ ┣ 📂_components
  ┃ ┃ ┃ ┣ 📜BestSellers.tsx
  ┃ ┃ ┃ ┣ 📜CartItem.tsx
+ ┃ ┃ ┃ ┣ 📜Footer.tsx
  ┃ ┃ ┃ ┣ 📜Hero.tsx
  ┃ ┃ ┃ ┣ 📜MenuClient.tsx
- ┃ ┃ ┃ ┗ 📜MenuItemCard.tsx
+ ┃ ┃ ┃ ┣ 📜MenuItemCard.tsx
+ ┃ ┃ ┃ ┗ 📜Reviewstack.tsx
  ┃ ┃ ┗ 📜page.tsx
  ┃ ┗ 📜layout.tsx
  ┣ 📂api
@@ -109,12 +110,16 @@ create table public.restaurant_settings (
  ┃ ┗ 📂reservations
  ┃ ┃ ┗ 📜route.ts
  ┣ 📂components
+ ┃ ┣ 📜BookingClient.tsx
+ ┃ ┣ 📜cart-button-logic.ts
  ┃ ┣ 📜CartButton.tsx
  ┃ ┣ 📜CustomCursor.tsx
  ┃ ┣ 📜IsOpen.tsx
  ┃ ┣ 📜Navbar.tsx
  ┃ ┣ 📜NavigationObserver.tsx
- ┃ ┗ 📜NavLink.tsx
+ ┃ ┣ 📜NavLink.tsx
+ ┃ ┣ 📜ReservationPanel.tsx
+ ┃ ┗ 📜useBooking.ts
  ┣ 📂dashboard
  ┃ ┣ 📂live-orders
  ┃ ┃ ┣ 📜page.tsx

@@ -16,7 +16,7 @@ export default async function Home() {
   .in('name', ['Americano', 'Cortado', 'Creamy latte'])
   if (error) throw new Error(error.message)
 
-    const items: Item[] = bestSellers
+  const items: Item[] = bestSellers
   return (
     <main>
       <Hero />
