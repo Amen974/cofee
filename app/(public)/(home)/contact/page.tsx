@@ -55,7 +55,6 @@ const Page = () => {
       className="min-h-screen flex flex-col md:justify-center items-center relative text-[#8D7E73] px-4 md:px-10 lg:px-25 pt-28 md:pt-10 pb-20"
     >
       <div className="grid md:grid-cols-2 gap-14 md:gap-10 max-w-5xl">
-        {/* Left: intro + info */}
         <div className="flex flex-col justify-center">
           <h1 className="contact-title text-[clamp(2.5rem,12vw,6rem)] text-[#A32D1C] leading-none">
             Get in Touch
@@ -100,7 +99,6 @@ const Page = () => {
           </div>
         </div>
  
-        {/* Right: form */}
         <div className="flex flex-col justify-center">
           <form className="flex flex-col gap-5">
             <div className="flex flex-col sm:flex-row gap-5">
@@ -157,7 +155,6 @@ const Page = () => {
  
             <button
               type="submit"
-              disabled={status === "submitting"}
               data-cursor-hover
               className="contact-submit flex items-center gap-2 w-fit text-[0.625rem] tracking-[0.25em] uppercase text-white bg-[#9a2d1e] px-6 py-3 rounded-xs hover:bg-[#8d2414] transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer mt-2"
             >
